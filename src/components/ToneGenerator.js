@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import '../css/SynthPad.css';
+import '../css/ToneGenerator.css';
 import Audio from './Audio'
+import FrequencySelector from './FrequencySelector';
 
 const ToneGenerator = () => {
 
@@ -61,8 +62,12 @@ const ToneGenerator = () => {
     useEffect(addOscillatorNode, [])
 
     const changeMasterVolume = (e) => {
+
+        if(typeof e === 'object') {
+            e = e.target.value
+        }
         
-        setMasterGainValue(e.target.value/100)
+        setMasterGainValue(e/100)
         //update selected OscillatorNode's GainNode to the selected value
         if (selectedOscillatorNodeIndex >= 0) {
             const oscillatorNodesCopy = [...oscillatorNodes]
@@ -70,25 +75,27 @@ const ToneGenerator = () => {
 
             // set the gain of the OscillatorNode's GainNode
             selectedOscillatorNode.oscillatorGainNode.gain.setValueAtTime(
-                e.target.value/100, Audio.context.currentTime
+                e/100, Audio.context.currentTime
             )
 
             // set the value stored in state for the gain
-            selectedOscillatorNode.gain = e.target.value
+            selectedOscillatorNode.gain = e
             setOscillatorNodes(oscillatorNodesCopy)
         }
     }
 
     const changeFrequencyValue = (e) => {
 
-        setFrequencyValue(e.target.v)
-
+        if(typeof e === 'object') {
+            e = e.target.value
+        }
+        setFrequencyValue(e)
         if (selectedOscillatorNodeIndex >= 0) {
             const oscillatorNodesCopy = [...oscillatorNodes]
             const selectedOscillatorNode = oscillatorNodesCopy[selectedOscillatorNodeIndex]
-            console.log(e.target.value)
+  
             selectedOscillatorNode.oscillatorNode.frequency.setValueAtTime(
-                e.target.value, Audio.context.currentTime
+                e, Audio.context.currentTime
             )
 
             setOscillatorNodes(oscillatorNodesCopy)
@@ -150,6 +157,7 @@ const ToneGenerator = () => {
                 onChange={changeFrequencyValue}
                 className='frequency'
             />
+            <FrequencySelector changeFrequencyValue={changeFrequencyValue} setFrequencyValue={setFrequencyValue}/>
         <select
             onChange={updateOscillatorType}
         >
