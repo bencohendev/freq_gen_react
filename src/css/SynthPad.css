@@ -1,0 +1,18 @@
+#root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .App {
+    display: grid;
+    width: 300px;
+    grid-template-columns: auto auto;
+    background-color: #5d5D5D
+  }
+  
+  .App * {
+    height: 50px;
+    margin: 5px;
+  }
