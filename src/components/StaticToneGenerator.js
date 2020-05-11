@@ -2,8 +2,13 @@ import React, {useState, useEffect} from 'react';
 import '../css/ToneGenerator.css';
 import Audio from './Audio'
 import FrequencySelector from './FrequencySelector';
+import FrequencySlider from './FrequencySlider'
+import OscillatorType from './OscillatorType'
+import PlayButton from './PlayButton'
+import Volume from './Volume'
+import AddOscillator from './AddOscillator';
 
-const ToneGenerator = () => {
+const StaticToneGenerator = () => {
 
     //set play state
     const [playing, setPlaying] = useState('Play')
@@ -11,7 +16,7 @@ const ToneGenerator = () => {
     const [oscillatorNodes, setOscillatorNodes] = useState([])
 
     //set state to represent initial value of masterGainNode
-    const [masterGainValue, setMasterGainValue] = useState(0)
+    const [masterGainValue, setMasterGainValue] = useState(.5)
 
     const [frequencyValue, setFrequencyValue] = useState(440)
 
@@ -50,7 +55,7 @@ const ToneGenerator = () => {
             oscillatorGainNode: oscillatorGainNode,
             frequency: oscillatorNode.frequency.value,
             type: oscillatorNode.type,
-            gain: 0
+            gain: .5
             
         }
         setOscillatorNodes([...oscillatorNodes, oscillatorNodeValues])
@@ -66,8 +71,10 @@ const ToneGenerator = () => {
         if(typeof e === 'object') {
             e = e.target.value
         }
-        
+
+
         setMasterGainValue(e/100)
+
         //update selected OscillatorNode's GainNode to the selected value
         if (selectedOscillatorNodeIndex >= 0) {
             const oscillatorNodesCopy = [...oscillatorNodes]
@@ -104,6 +111,7 @@ const ToneGenerator = () => {
     }
 
     const updateOscillatorType = (e) => {
+
        
         if (selectedOscillatorNodeIndex >= 0) {
             const oscillatorNodesCopy = [...oscillatorNodes]
@@ -115,12 +123,10 @@ const ToneGenerator = () => {
         }
     }
 
-    // Fade in the MasterGainNode gain value to masterGainValue on mouseDown by .001 seconds
     const play = () => {
         Audio.masterGainNode.gain.setTargetAtTime(masterGainValue, Audio.context.currentTime, 0.001)
     }
 
-    // Fade out the MasterGainNode gain value to 0 on mouseDown by .001 seconds
     const pause = () => {
         Audio.masterGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
     }
@@ -136,45 +142,18 @@ const ToneGenerator = () => {
             pause()
         }
     }
-
+    
   return(  
     <div>
-        <p>Volume: </p>
-            <input
-                type="range"
-                min='0'
-                max='100'
-                value={masterGainValue*100}
-                onChange={changeMasterVolume}
-                className='pad-volume'
-            />
-            <p>Frequency Slider</p>
-            <input
-                type="range"
-                min='0'
-                max='20000'
-                value={frequencyValue}
-                onChange={changeFrequencyValue}
-                className='frequency'
-            />
-            <FrequencySelector changeFrequencyValue={changeFrequencyValue} setFrequencyValue={setFrequencyValue}/>
-        <select
-            onChange={updateOscillatorType}
-        >
-            <option>Sine</option>
-            <option>Square</option>
-            <option>Triangle</option>
-            <option>Sawtooth</option>
-        </select>
-        <button
-            onClick={()=>playOrPause(playing)}
-            className='play'
-        >
-            {playing}
-        </button>
+        <Volume masterGainValue={masterGainValue} changeMasterVolume={changeMasterVolume}/>
+        <FrequencySlider frequencyValue={frequencyValue} changeFrequencyValue={changeFrequencyValue} />
+        <FrequencySelector changeFrequencyValue={changeFrequencyValue} />
+        <OscillatorType updateOscillatorType={updateOscillatorType} />
+        <PlayButton playing={playing} playOrPause={playOrPause} />
+        <AddOscillator addOscillatorNode={addOscillatorNode}/>
     </div>
   )
 
 }
 
-export default ToneGenerator
+export default StaticToneGenerator
