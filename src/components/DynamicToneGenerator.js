@@ -189,10 +189,6 @@ useEffect(populateAllPitches, [])
     if( (playing === 'Pause') ) {
         intervalID = setInterval(() => {  
             const pitchToPlay = selectedFreqArray[Math.floor(Math.random() * selectedFreqArray.length)]
-            console.log('pitch: ' + pitchToPlay.pitch)
-            console.log('playing: ' + playing)
-            console.log('bpm: ' + bpm)
-            console.log('number of pitches: ' + numberOfPitches)
             changeFrequencyValue(pitchToPlay.frequency)
             Audio.masterGainNode.gain.setTargetAtTime(masterGainValue, Audio.context.currentTime, 0.001)
         
@@ -201,16 +197,15 @@ useEffect(populateAllPitches, [])
             }, (bpm - (bpm/4)));
         }, (bpm));
 
-        console.log(infinitePitchSets)
+
         //if user only wants one set of pitches
+        const finiteNumberOfPitches = (parseInt(numberOfPitches) + 1)
         if(!infinitePitchSets){
         setTimeout(() => {
-            console.log('autostop')
             window.clearInterval(intervalID)
             setPlaying('Play')   
-            console.log(numberOfPitches)
             Audio.masterGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
-        }, (bpm * (numberOfPitches )));
+        }, (bpm * (finiteNumberOfPitches)));
     }
 
         return () => clearInterval(intervalID)
@@ -219,7 +214,6 @@ useEffect(populateAllPitches, [])
 
 
     if( playing === 'Play' ) {
-        console.log('clear it dammit')
         window.clearInterval(intervalID)
         Audio.masterGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
     } 
