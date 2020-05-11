@@ -5,7 +5,6 @@ import '../css/ToneGenerator.css';
 const FrequencyRangeSelector = (props) => {
 
     const {minFrequencyValue, updateMinFrequencyValue, maxFrequencyValue, updateMaxFrequencyValue, pitchArray} = props
-    
     return(  
         <div>
             <select
@@ -13,11 +12,14 @@ const FrequencyRangeSelector = (props) => {
                 onChange={updateMinFrequencyValue}
             >
             {
-                pitchArray.map((pitch, index) => {
-                    if(pitch < maxFrequencyValue){
+                pitchArray.map((pitchObject, index) => {
+                    if(pitchObject.frequency < maxFrequencyValue){
                     return(                    
-                    <option key={index}>
-                        {Math.round(pitch)}
+                    <option
+                        key={index}
+                        value={pitchObject.frequency}                        
+                    >                        
+                        {pitchObject.pitch}
                     </option>
                     )
                  }
@@ -29,11 +31,14 @@ const FrequencyRangeSelector = (props) => {
                 onChange={updateMaxFrequencyValue}
             >
                 {
-                pitchArray.map((pitch, index) => {
-                    if(pitch > minFrequencyValue)
+                pitchArray.map((pitchObject, index) => {
+                    if(pitchObject.frequency > minFrequencyValue)
                     return(
-                        <option key={index}>
-                            {Math.round(pitch)}
+                        <option 
+                            key={index}
+                            value={pitchObject.frequency}                        
+                        >
+                            {pitchObject.pitch}
                         </option>
                     )
                 })

@@ -25,7 +25,7 @@ const DynamicToneGenerator = () => {
  const [maxFrequencyValue, setMaxFrequencyValue] = useState(7902.133)
  const [selectedFreqArray, setSelectedFreqArray] = useState([])
 
- const [bpm, setBpm] = useState(60)
+ const [bpm, setBpm] = useState(1000)
  const [numberOfPitches, setNumberOfPitches] = useState(1) 
  const [infinitePitchSets, setInfinitePitchSets] = useState(true)
 
@@ -78,15 +78,14 @@ const DynamicToneGenerator = () => {
  const populateAllPitches = () => {
     let fundamentalPitches = [27.5, 29.135, 30.868, 32.703, 34.648, 36.708, 38.891, 40.203, 43.464, 46.249, 48.999, 51.913]
     const pitchNames = ['a', 'a#', 'b', 'c' , 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#']
-    
-    let allPitches = [
-        ...fundamentalPitches
-    ]
 
-    let pitchMultiplier = 2
-    for(let i=1; i<=8; i++) {         
-       let loopPitches = fundamentalPitches.map((pitch) =>pitch*pitchMultiplier)
-       allPitches = allPitches.concat(loopPitches)
+    
+    let allPitches = []
+    let pitchMultiplier = 1
+    for(let i=0; i<=8; i++) {
+        for(let j=0; j<=fundamentalPitches.length-1; j++){         
+            allPitches.push({pitch: pitchNames[j]+i, frequency: fundamentalPitches[j]*pitchMultiplier})
+        }
         pitchMultiplier = pitchMultiplier*2
     }
     setPitchArray(allPitches)
@@ -123,6 +122,7 @@ useEffect(populateAllPitches, [])
      if(typeof e === 'object') {
          e = e.target.value
      }
+     console.log('e'+e)
      setFrequencyValue(e)
      if (selectedOscillatorNodeIndex >= 0) {
          const oscillatorNodesCopy = [...oscillatorNodes]
@@ -149,8 +149,8 @@ useEffect(populateAllPitches, [])
 
  const updateMinFrequencyValue  = (e) => {
     setMinFrequencyValue(e.target.value)
-    const filteredPitchArray = pitchArray.filter((pitch) => {
-        if( (pitch > e.target.value) && (pitch < maxFrequencyValue) ) {
+    const filteredPitchArray = pitchArray.filter((pitchObject) => {
+        if( (pitchObject.frequency > e.target.value) && (pitchObject.frequency < maxFrequencyValue) ) {
             return true
         }
     })
@@ -159,8 +159,8 @@ useEffect(populateAllPitches, [])
 
  const updateMaxFrequencyValue  = (e) => {
     setMaxFrequencyValue(e.target.value)
-    const filteredPitchArray = pitchArray.filter((pitch) => {
-         if((pitch < e.target.value) && (pitch > minFrequencyValue) ) {
+    const filteredPitchArray = pitchArray.filter((pitchObject) => {
+         if((pitchObject.frequency < e.target.value) && (pitchObject.frequency > minFrequencyValue) ) {
              return true
          }
     })
@@ -177,10 +177,8 @@ useEffect(populateAllPitches, [])
 
  const updateInfinitePitchSets = () => {
      if (infinitePitchSets) {
-        console.log(infinitePitchSets)
         setInfinitePitchSets(false)
      } else {
-        console.log(infinitePitchSets)
          setInfinitePitchSets(true)
      }
  }
@@ -191,11 +189,11 @@ useEffect(populateAllPitches, [])
     if( (playing === 'Pause') ) {
         intervalID = setInterval(() => {  
             const pitchToPlay = selectedFreqArray[Math.floor(Math.random() * selectedFreqArray.length)]
-            console.log('pitch: ' + pitchToPlay)
+            console.log('pitch: ' + pitchToPlay.pitch)
             console.log('playing: ' + playing)
             console.log('bpm: ' + bpm)
             console.log('number of pitches: ' + numberOfPitches)
-            changeFrequencyValue(parseInt(pitchToPlay))
+            changeFrequencyValue(pitchToPlay.frequency)
             Audio.masterGainNode.gain.setTargetAtTime(masterGainValue, Audio.context.currentTime, 0.001)
         
         setTimeout(() => {
