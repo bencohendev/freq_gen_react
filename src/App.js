@@ -41,9 +41,7 @@ function App() {
 
         </div>
     </Router>
-    // <div className="App">
 
-    // </div>
   );
 }
 
