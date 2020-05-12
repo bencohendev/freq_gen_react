@@ -1,6 +1,6 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button'
-import '../css/ToneGenerator.css';
+import '../css/App.css';
 
 const PlayButton = (props) => {
 

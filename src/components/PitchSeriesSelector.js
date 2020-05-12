@@ -1,5 +1,5 @@
 import React from 'react'
-import '../css/ToneGenerator.css';
+import '../css/App.css';
 
 const PitchSeriesSelector = (props) => {
 

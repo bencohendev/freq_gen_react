@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import '../css/ToneGenerator.css';
+import '../css/App.css';
 import Audio from './Audio'
 import FrequencySelector from './FrequencySelector';
 import FrequencySlider from './FrequencySlider'

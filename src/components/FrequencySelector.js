@@ -1,5 +1,5 @@
 import React from 'react';
-import  '../css/FrequencySelector.css'
+import  '../css/App.css'
 import Button from 'react-bootstrap/Button'
 
  const FrequencySelector = (props) => {

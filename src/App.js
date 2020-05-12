@@ -2,12 +2,11 @@ import React from 'react';
 import './css/App.css';
 import StaticToneGenerator from './components/StaticToneGenerator'
 import DynamicToneGenerator from './components/DynamicToneGenerator'
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, NavLink } from "react-router-dom";
+
+const activeStyle = {
+  color: 'red'
+}
 
 function App() {
   return (
@@ -18,13 +17,26 @@ function App() {
         >
         Welcome to Ben's Pitch Thingy
         </header>
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Static Pitches</Link>
+          <nav className="nav">
+            <ul className='nav-container'>
+              <li className='nav-li'>
+                <NavLink 
+                className='nav-link'
+                exact={true}
+                to="/"
+                activeStyle={activeStyle}
+                >
+                  Static Pitches
+                </NavLink>
               </li>
-              <li>
-                <Link to="/dynamic">Pitch Series</Link>
+              <li className='nav-li'>
+                <NavLink 
+                className='nav-link'
+                to="/dynamic"
+                activeStyle={activeStyle}
+                >
+                  Pitch Series
+                </NavLink>
               </li>
             </ul>
           </nav>
