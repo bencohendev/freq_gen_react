@@ -16,7 +16,7 @@ const StaticToneGenerator = () => {
     const [oscillatorNodes, setOscillatorNodes] = useState([])
 
     //set state to represent initial value of masterGainNode
-    const [masterGainValue, setMasterGainValue] = useState(.5)
+    const [masterGainValue, setMasterGainValue] = useState(0)
 
     const [frequencyValue, setFrequencyValue] = useState(440)
 
@@ -55,7 +55,7 @@ const StaticToneGenerator = () => {
             oscillatorGainNode: oscillatorGainNode,
             frequency: oscillatorNode.frequency.value,
             type: oscillatorNode.type,
-            gain: .5
+            gain: 0
             
         }
         setOscillatorNodes([...oscillatorNodes, oscillatorNodeValues])

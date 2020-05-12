@@ -76,7 +76,7 @@ const DynamicToneGenerator = () => {
  useEffect(addOscillatorNode, [])
 
  const populateAllPitches = () => {
-    let fundamentalPitches = [27.5, 29.135, 30.868, 32.703, 34.648, 36.708, 38.891, 40.203, 43.464, 46.249, 48.999, 51.913]
+    let fundamentalPitches = [27.5, 29.135, 30.868, 32.703, 34.648, 36.708, 38.891, 41.203, 43.464, 46.249, 48.999, 51.913]
     const pitchNames = ['a', 'a#', 'b', 'c' , 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#']
 
     
@@ -148,9 +148,12 @@ useEffect(populateAllPitches, [])
  }
 
  const updateMinFrequencyValue  = (e) => {
-    setMinFrequencyValue(e.target.value)
+    if(typeof e === 'object') {
+        e = e.target.value
+    }
+    setMinFrequencyValue(e)
     const filteredPitchArray = pitchArray.filter((pitchObject) => {
-        if( (pitchObject.frequency > e.target.value) && (pitchObject.frequency < maxFrequencyValue) ) {
+        if( (pitchObject.frequency > e) && (pitchObject.frequency < maxFrequencyValue) ) {
             return true
         }
     })
@@ -158,9 +161,13 @@ useEffect(populateAllPitches, [])
 }
 
  const updateMaxFrequencyValue  = (e) => {
-    setMaxFrequencyValue(e.target.value)
+    if(typeof e === 'object') {
+        e = e.target.value
+    }
+    console.log(e)
+    setMaxFrequencyValue(e)
     const filteredPitchArray = pitchArray.filter((pitchObject) => {
-         if((pitchObject.frequency < e.target.value) && (pitchObject.frequency > minFrequencyValue) ) {
+         if((pitchObject.frequency < e) && (pitchObject.frequency > minFrequencyValue) ) {
              return true
          }
     })
@@ -183,6 +190,15 @@ useEffect(populateAllPitches, [])
      }
  }
 
+ const instrumentSelector = (e) => {
+     const instrument = e.target.value
+     switch (instrument) {
+         case 'guitar':
+            updateMinFrequencyValue(164.812)
+            updateMaxFrequencyValue(1046.496)
+     }
+ }
+
  //this effect starts and stops the tone generator
  useEffect(() => {
     let intervalID = null
@@ -199,7 +215,7 @@ useEffect(populateAllPitches, [])
 
 
         //if user only wants one set of pitches
-        const finiteNumberOfPitches = (parseInt(numberOfPitches) + 1)
+    const finiteNumberOfPitches = (parseInt(numberOfPitches) + 1)
         if(!infinitePitchSets){
         setTimeout(() => {
             window.clearInterval(intervalID)
@@ -232,7 +248,7 @@ useEffect(populateAllPitches, [])
  
     return (
         <div>
-            <FrequencyRangeSelector pitchArray={pitchArray} changeFrequencyValue={changeFrequencyValue} minFrequencyValue={minFrequencyValue} updateMinFrequencyValue={updateMinFrequencyValue} maxFrequencyValue={maxFrequencyValue} updateMaxFrequencyValue={updateMaxFrequencyValue}/>
+            <FrequencyRangeSelector pitchArray={pitchArray} changeFrequencyValue={changeFrequencyValue} minFrequencyValue={minFrequencyValue} updateMinFrequencyValue={updateMinFrequencyValue} maxFrequencyValue={maxFrequencyValue} updateMaxFrequencyValue={updateMaxFrequencyValue} instrumentSelector={instrumentSelector}/>
             <PitchSeriesSelector updateNumberOfPitches={updateNumberOfPitches} updateBpm={updateBpm} updateInfinitePitchSets={updateInfinitePitchSets}/>
             <Volume masterGainValue={masterGainValue} changeMasterVolume={changeMasterVolume}/>
             <OscillatorType updateOscillatorType={updateOscillatorType} />

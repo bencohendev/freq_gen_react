@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 
  const FrequencySelector = (props) => {
 
-    const pitches = [27.5, 29.135, 30.868, 32.703, 34.648, 36.708, 38.891, 40.203, 43.464, 46.249, 48.999, 51.913]
+    const pitches = [27.5, 29.135, 30.868, 32.703, 34.648, 36.708, 38.891, 41.203, 43.464, 46.249, 48.999, 51.913]
     const pitchNames = ['a', 'a#', 'b', 'c' , 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#']
 
    return (

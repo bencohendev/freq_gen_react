@@ -4,9 +4,21 @@ import '../css/App.css';
 
 const FrequencyRangeSelector = (props) => {
 
-    const {minFrequencyValue, updateMinFrequencyValue, maxFrequencyValue, updateMaxFrequencyValue, pitchArray} = props
+    const {minFrequencyValue, updateMinFrequencyValue, maxFrequencyValue, updateMaxFrequencyValue, pitchArray, instrumentSelector} = props
     return(  
         <div>
+            <select
+            onChange={instrumentSelector}>
+                <option>
+                    Select an Instrument
+                </option>
+                    <option>
+                    guitar
+                </option>
+                <option>
+                    Bb saxophone
+                </option>
+            </select>
             <select
                 value={minFrequencyValue}
                 onChange={updateMinFrequencyValue}
