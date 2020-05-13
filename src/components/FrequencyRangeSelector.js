@@ -12,8 +12,11 @@ const FrequencyRangeSelector = (props) => {
                 <option>
                     Select an Instrument
                 </option>
-                    <option>
-                    guitar
+                <option>
+                    electric guitar
+                </option>
+                <option>
+                    classical guitar
                 </option>
                 <option>
                     Bb saxophone
