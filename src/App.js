@@ -19,7 +19,7 @@ function App() {
         </header>
           <nav className="nav">
             <ul className='nav-container'>
-              <li className='nav-li'>
+              {/* <li className='nav-li'>
                 <NavLink 
                 className='nav-link'
                 exact={true}
@@ -28,7 +28,7 @@ function App() {
                 >
                   Static Pitches
                 </NavLink>
-              </li>
+              </li> */}
               <li className='nav-li'>
                 <NavLink 
                 className='nav-link'
