@@ -122,6 +122,7 @@ useEffect(populateAllPitches, [])
      if(typeof e === 'object') {
          e = e.target.value
      }
+     console.log('e'+e)
      setFrequencyValue(e)
      if (selectedOscillatorNodeIndex >= 0) {
          const oscillatorNodesCopy = [...oscillatorNodes]
@@ -132,6 +133,7 @@ useEffect(populateAllPitches, [])
          )
 
          setOscillatorNodes(oscillatorNodesCopy)
+         console.log(oscillatorNodes)
      }
  }
 
@@ -150,6 +152,7 @@ useEffect(populateAllPitches, [])
     if(typeof e === 'object') {
         e = e.target.value
     }
+    console.log(e)
     setMinFrequencyValue(e)
     const filteredPitchArray = pitchArray.filter((pitchObject) => {
         if( (pitchObject.frequency > e) && (pitchObject.frequency < maxFrequencyValue) ) {
@@ -163,6 +166,7 @@ useEffect(populateAllPitches, [])
     if(typeof e === 'object') {
         e = e.target.value
     }
+    console.log(e)
     setMaxFrequencyValue(e)
     const filteredPitchArray = pitchArray.filter((pitchObject) => {
          if((pitchObject.frequency < e) && (pitchObject.frequency > minFrequencyValue) ) {
@@ -207,79 +211,48 @@ useEffect(populateAllPitches, [])
 useEffect(() => {
     let intervalID = null
     if( (playing === 'Pause') ) {
-        if(infinitePitchSets){
-        let i=0
-        intervalID = setInterval(() => {
-            i++
-            if(i===parseInt(numberOfPitches)+1) {
-                Audio.masterGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
-                i=0
-            } else {
-                
-                const pitchToPlay = selectedFreqArray[Math.floor(Math.random() * selectedFreqArray.length)]
-                changeFrequencyValue(pitchToPlay.frequency)
-                Audio.masterGainNode.gain.setTargetAtTime(masterGainValue, Audio.context.currentTime, 0.001)
+        intervalID = setInterval(() => {  
+            const pitchToPlay = selectedFreqArray[Math.floor(Math.random() * selectedFreqArray.length)]
+            changeFrequencyValue(pitchToPlay.frequency)
+            Audio.masterGainNode.gain.setTargetAtTime(masterGainValue, Audio.context.currentTime, 0.001)
         
-            }
-            
-            setTimeout(() => {
+        setTimeout(() => {
                 Audio.masterGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
             }, (bpm - (bpm/4)));
         }, (bpm));
-        
+
+
+        //if user only wants one set of pitches
+    const finiteNumberOfPitches = (parseInt(numberOfPitches) + 1)
+        if(!infinitePitchSets){
+        setTimeout(() => {
+            window.clearInterval(intervalID)
+            setPlaying('Play')   
+            Audio.masterGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
+        }, (bpm * (finiteNumberOfPitches)));
+    }
+
         return () => clearInterval(intervalID)
     }
 
 
-        //if user only wants one set of pitches
-        if(!infinitePitchSets){
-            const playTheDangThing = (i) => {
-                if(i<numberOfPitches) {
-                setTimeout(() => {
-
-                    const pitchToPlay = selectedFreqArray[Math.floor(Math.random() * selectedFreqArray.length)]
-                        changeFrequencyValue(pitchToPlay.frequency)
-                        Audio.masterGainNode.gain.setTargetAtTime(masterGainValue, Audio.context.currentTime, 0.001)
-                    
-                    setTimeout(() => {
-                            Audio.masterGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
-                        }, (bpm - (bpm/4)));
-
-                    }, (bpm*i));
-                    i++
-                } else{
-                setTimeout(() => {
-                    setPlaying('Play')
-                    Audio.masterGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
-                    return
-                    }, (bpm*i));
-                }
-
-            }
-
-            for( let i =0; i <= numberOfPitches; i++ ) {            
-                playTheDangThing(i)
-            }
-        }
-    }
 
     if( playing === 'Play' ) {
-        clearInterval(intervalID)
-
+        window.clearInterval(intervalID)
         Audio.masterGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
     } 
 
- }, [playing, selectedFreqArray, bpm, numberOfPitches, setPlaying, infinitePitchSets])
+}, [playing, selectedFreqArray, bpm, numberOfPitches, setPlaying, infinitePitchSets])
 
 
- const playOrPause = (playing) => {
-     if ( (playing === 'Play') || (!playing)) {
-         setPlaying('Pause')
-     }
-     if (playing === 'Pause') {
-         setPlaying('Play')   
-     }
- }
+const playOrPause = (playing) => {
+    if ( (playing === 'Play') || (!playing)) {
+        setPlaying('Pause')
+    }
+    if (playing === 'Pause') {
+        setPlaying('Play')   
+    }
+}
  
     return (
         <div>

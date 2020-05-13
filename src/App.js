@@ -32,7 +32,7 @@ function App() {
               <li className='nav-li'>
                 <NavLink 
                 className='nav-link'
-                to="/dynamic"
+                to="/"
                 activeStyle={activeStyle}
                 >
                   Pitch Series
@@ -42,12 +42,12 @@ function App() {
           </nav>
 
         <Switch>
-          <Route path="/dynamic">
+          <Route path="/">
             <DynamicToneGenerator />
           </Route>
-          <Route path="/">
+          {/* <Route path="/">
             <StaticToneGenerator />
-          </Route>
+          </Route> */}
         </Switch>
 
 
