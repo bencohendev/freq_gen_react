@@ -7,7 +7,7 @@ export const Screen = () => {
   //const [context, setContext] = useState()
   const [oscillatorNodes, setOscillatorNodes] = useState([])
   const [oscillatorGainNodes, setOscillatorGainNodes] = useState([])
-  const [playing, setPlaying] = useState(null)
+  const [playing, setPlaying] = useState([])
 
   const createNode = () => {
 
@@ -16,22 +16,12 @@ export const Screen = () => {
 
     oscillatorGainNode.gain.setValueAtTime(.5, Audio.context.currentTime)
     onOffNode.gain.setValueAtTime(0, Audio.context.currentTime)
-
-    oscillatorGainNode.connect(onOffNode)
-
-   
+    oscillatorGainNode.connect(onOffNode)   
     const oscillatorNode = Audio.context.createOscillator();
-
-  //  oscillatorNode.connect(Audio.context.destination)
     oscillatorNode.connect(oscillatorGainNode)
-
-
-    
-
     onOffNode.connect(Audio.context.destination)
 
     oscillatorNode.start()
-    //oscillatorNode.suspend()
 
     const oscillatorNodeValues = {
       oscillatorNode: oscillatorNode,
@@ -45,11 +35,10 @@ export const Screen = () => {
 
     setOscillatorNodes([...oscillatorNodes, oscillatorNodeValues])
     setOscillatorGainNodes([...oscillatorGainNodes, oscillatorGainNode])
+    setPlaying([...playing, 'Play'])
   }
 
   useEffect(createNode, [])
-
-
 
   const changeVolume = (value, gainNode, i) => {
     const oscillatorNodeCopy = [...oscillatorNodes]
@@ -67,40 +56,30 @@ export const Screen = () => {
     const oscillatorNodeCopy = [...oscillatorNodes]
     const selectedOscillatorNode = oscillatorNodeCopy[i]
 
+
     if(selectedOscillatorNode.onOffNode.gain.value === 0) {  
-      console.log(selectedOscillatorNode.oscillatorGainNode.gain.value)
       if(selectedOscillatorNode.oscillatorGainNode.gain.value === 0 ) {
         selectedOscillatorNode.oscillatorGainNode.gain.setValueAtTime(
           .5, Audio.context.currentTime
         )
       }
   
-      selectedOscillatorNode.onOffNode.gain.setValueAtTime(
-        1, Audio.context.currentTime
-      )  
-       setOscillatorNodes(oscillatorNodeCopy)
-       setPlaying('Pause')
+      selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, Audio.context.currentTime)  
+      setOscillatorNodes(oscillatorNodeCopy)
+      playing[i] = "Pause"
+      setPlaying(playing)
   
     } else if(selectedOscillatorNode.onOffNode.gain.value > 0) {
   
-      selectedOscillatorNode.onOffNode.gain.setValueAtTime(
-        0, Audio.context.currentTime
-      )
+      selectedOscillatorNode.onOffNode.gain.setValueAtTime(0, Audio.context.currentTime)
        setOscillatorNodes(oscillatorNodeCopy)
-       setPlaying('Play')
+       playing[i] = "Play"
+       setPlaying(playing)
     }
-
-    }
-
-
-
-  const stop = (node, i) => {
 
   }
 
-
-
   return (
-    <ToneGenerator createNode={createNode} oscillatorNodes={oscillatorNodes} oscillatorGainNodes={oscillatorGainNodes} setOscillatorGainNodes={setOscillatorGainNodes} changeVolume={changeVolume} play={play} stop={stop} playing={playing}/>
+    <ToneGenerator createNode={createNode} oscillatorNodes={oscillatorNodes} oscillatorGainNodes={oscillatorGainNodes} setOscillatorGainNodes={setOscillatorGainNodes} changeVolume={changeVolume} play={play} playing={playing}/>
   )
 }
