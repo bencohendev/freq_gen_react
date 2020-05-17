@@ -1,0 +1,3 @@
+-Create play/pause component
+-make play and stop functions one play/pause function
+-get play and volume button design worked out (currently spitting out all play buttons together and all volume controls together)
