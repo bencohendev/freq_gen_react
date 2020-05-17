@@ -67,9 +67,7 @@ export const Screen = () => {
     const oscillatorNodeCopy = [...oscillatorNodes]
     const selectedOscillatorNode = oscillatorNodeCopy[i]
 
-    if(selectedOscillatorNode.onOffNode.gain.value === 0) {
-
-  
+    if(selectedOscillatorNode.onOffNode.gain.value === 0) {  
       console.log(selectedOscillatorNode.oscillatorGainNode.gain.value)
       if(selectedOscillatorNode.oscillatorGainNode.gain.value === 0 ) {
         selectedOscillatorNode.oscillatorGainNode.gain.setValueAtTime(
