@@ -1,3 +1,3 @@
--Create play/pause component
--make play and stop functions one play/pause function
--get play and volume button design worked out (currently spitting out all play buttons together and all volume controls together)
+-get frequency slider on a log scale for visual effect
+-add a remove button to oscillators
+-fix gain value on volume slider. it initializes at .5 out of 100

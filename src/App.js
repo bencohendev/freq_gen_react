@@ -1,11 +1,11 @@
 import React from 'react';
-import { Screen } from './Screens/StaticPitches/Screen'
+import { StaticController } from './Screens/StaticPitches/StaticController'
 import './App.css';
 
 function App() {
   return (
       <div className="center">
-        <Screen />
+        <StaticController />
       </div>
   );
 }
