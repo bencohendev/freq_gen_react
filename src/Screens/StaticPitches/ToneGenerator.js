@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 
 export const ToneGenerator = (props) => {
 
-  const { createNode, oscillatorNodes, changeVolume, play, playing } = props
+  const { createNode, oscillatorNodes, changeVolume, changePan, playPause, playing } = props
   
   return (
     <div>
@@ -16,7 +16,7 @@ export const ToneGenerator = (props) => {
           >
             <Button
               key={`start-${i}`}
-              onClick={()=> play(node, i)}
+              onClick={()=> playPause(node, i)}
             >
               {playing[i] === 'Play'
                 ? 'Play'
@@ -33,7 +33,16 @@ export const ToneGenerator = (props) => {
                   className='volume'
               />
             </div>
-            
+            <div key={`pan-${i}`}>
+              <p>Pan</p>
+              <input
+                type="range"
+                min="-1000"
+                max="1000"
+                onChange={(e)=>changePan(e.target.value, node, i)}
+              />
+            </div>
+
           </div>
         ))}
 
