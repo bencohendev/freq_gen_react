@@ -89,13 +89,13 @@ export const StaticController = () => {
     if(typeof e === 'object') {
         e = e.target.value
     }
+
     if(e) {
       newFreq = e
-    }
-
-    if (value) {
+    } else {
       newFreq = value
     }
+
 
     setFrequency(newFreq)
         const oscillatorNodesCopy = [...oscillatorNodes]
