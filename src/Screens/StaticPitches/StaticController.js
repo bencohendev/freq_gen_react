@@ -17,20 +17,16 @@ export const StaticController = () => {
     //create nodes. oscillatorGainNode used for volume control. onOffNode used for playing and pausing. Pan Node for panning
     const oscillatorGainNode = Audio.context.createGain()
     const onOffNode = Audio.context.createGain()
+    const panNode = Audio.context.createPanner()
 
-    let panNode = null
-    if ( (typeof Audio.context.createStereoPanner() === 'object') ) {   
-     panNode = Audio.context.createStereoPanner()
-     panNode.pan.setValueAtTime(0, Audio.context.currentTime)
-    } else {
-      panNode = Audio.context.createPanner()
-      panNode.panningModel = 'equalpower'
-      panNode.setPosition(0, 0, 0)
-    }
+
 
     //initialize node values
     oscillatorGainNode.gain.setValueAtTime(.5, Audio.context.currentTime)
-    onOffNode.gain.setValueAtTime(0, Audio.context.currentTime)
+    onOffNode.gain.setValueAtTime(0, Audio.context.currentTime)      
+    panNode.panningModel = 'equalpower'
+    panNode.setPosition(0, 0, 0)
+
 
     //connect node chain
     oscillatorNode.connect(oscillatorGainNode)
@@ -83,14 +79,12 @@ export const StaticController = () => {
 
   //change pan of individual oscillators
   const changePan = (e, value, i) => {
-    if ( (typeof Audio.context.createStereoPanner() === 'object') ) {
-      const oscillatorNodeCopy = [...oscillatorNodes]
-      const selectedOscillatorNode = oscillatorNodeCopy[i]
-      selectedOscillatorNode.oscillatorPanNode.pan.setValueAtTime(value / 100, Audio.context.currentTime)
-      selectedOscillatorNode.pan = value / 100
-
-      setOscillatorNodes(oscillatorNodeCopy)
-    }
+    const oscillatorNodeCopy = [...oscillatorNodes]
+    const selectedOscillatorNode = oscillatorNodeCopy[i]
+    console.log(selectedOscillatorNode.oscillatorPanNode)
+    selectedOscillatorNode.oscillatorPanNode.setPosition(value/100, 0 ,0)
+    selectedOscillatorNode.pan = value / 100
+    setOscillatorNodes(oscillatorNodeCopy)
   }
 
   const changeFrequency = (e, value, i) => {
