@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import Audio from '../../components/Audio'
-import { StaticPlayer } from './StaticPlayer'
+import { StaticPlayer } from '../StaticPitches/StaticPlayer'
 
-export const StaticController = () => {
+export const SeriesController = () => {
 
   const [oscillatorNodes, setOscillatorNodes] = useState([])
   const [oscillatorGainNodes, setOscillatorGainNodes] = useState([])
@@ -55,7 +55,7 @@ export const StaticController = () => {
   const deleteOscillator = (i) => {
     const oscillatorNodeCopy = [...oscillatorNodes]
     const deletedNode = oscillatorNodeCopy.splice(i, 1)
-    if(deletedNode[0].onOffNode.gain.value > 0){
+    if (deletedNode[0].onOffNode.gain.value > 0){
       actualPlayPause(deletedNode, i)
     }
     setOscillatorNodes(oscillatorNodeCopy)
@@ -64,13 +64,11 @@ export const StaticController = () => {
 
   //change volume of individual oscillators
   const changeVolume = (e, value, i) => {
-
     const oscillatorNodeCopy = [...oscillatorNodes]
     const selectedOscillatorNode = oscillatorNodeCopy[i]
-
     selectedOscillatorNode.oscillatorGainNode.gain.setValueAtTime(value/100, Audio.context.currentTime)
-     selectedOscillatorNode.gain = value
-     setOscillatorNodes(oscillatorNodeCopy)
+    selectedOscillatorNode.gain = value
+    setOscillatorNodes(oscillatorNodeCopy)
   }
 
   //change pan of individual oscillators
@@ -79,9 +77,8 @@ export const StaticController = () => {
     const oscillatorNodeCopy = [...oscillatorNodes]
     const selectedOscillatorNode = oscillatorNodeCopy[i]
     selectedOscillatorNode.oscillatorPanNode.pan.setValueAtTime(value / 100, Audio.context.currentTime)
-     selectedOscillatorNode.pan = value / 100
-
-     setOscillatorNodes(oscillatorNodeCopy)
+    selectedOscillatorNode.pan = value / 100
+    setOscillatorNodes(oscillatorNodeCopy)
   }
 
   const changeFrequency = (e, value, i) => {
@@ -100,7 +97,6 @@ export const StaticController = () => {
     setFrequency(newFreq)
         const oscillatorNodesCopy = [...oscillatorNodes]
         const selectedOscillatorNode = oscillatorNodesCopy[i]
-
         selectedOscillatorNode.oscillatorNode.frequency.setValueAtTime(newFreq, Audio.context.currentTime)
         setOscillatorNodes(oscillatorNodesCopy)
     

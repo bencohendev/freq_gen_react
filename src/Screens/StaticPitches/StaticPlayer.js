@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Paper, Button, Slider, Chip } from '@material-ui/core';
+import { Grid, Paper, Button, Slider } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import FrequencySelector from './FrequencySelector'
 import FrequencySlider from './FrequencySlider'
@@ -7,7 +7,7 @@ import FrequencySlider from './FrequencySlider'
 
 export const StaticPlayer = (props) => {
 
-  const { createNode, deleteOscillator, oscillatorNodes, changeVolume, changePan, frequency, changeFrequency, playPause, playing } = props
+  const { createNode,  deleteOscillator, oscillatorNodes, changeVolume, changePan, frequency, changeFrequency, playPause, playing } = props
 
 
   return (
@@ -15,7 +15,7 @@ export const StaticPlayer = (props) => {
       <Grid>
         <div className="create-oscillator-btn">
           <Button
-            onClick={createNode}
+            onClick={()=>createNode()}
             color="secondary"
             variant="contained"
           >
@@ -63,9 +63,9 @@ export const StaticPlayer = (props) => {
                     onChange={(e, value) => changePan(e, value, i)}
                   />
                 </Grid>
-                <Grid item xs={1} key={`remove-${i}`}>
+                <Grid item key={`remove-${i}`}>
                   <Button onClick={()=>deleteOscillator(i)}>
-                    <HighlightOffIcon />
+                    <HighlightOffIcon></HighlightOffIcon>
                   </Button>
 
                 </Grid>
