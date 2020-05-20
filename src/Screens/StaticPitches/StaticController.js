@@ -56,19 +56,17 @@ export const StaticController = () => {
     if(deletedNode[0].onOffNode.gain.value > 0){
       actualPlayPause(deletedNode, i)
     }
+    playing.splice(i, 1)
+    setPlaying(playing)
     setOscillatorNodes(oscillatorNodeCopy)
   }
 
-const changeOscillatorType = (e, value) => {
-  console.log(e)   
-  console.log(value)    
-  const oscillatorNodesCopy = [...oscillatorNodes]
-  const selectedOscillatorNode = oscillatorNodesCopy[0]
+const changeOscillatorType = (e, value, i) => {  
+  const oscillatorNodeCopy = [...oscillatorNodes]
+  const selectedOscillatorNode = oscillatorNodeCopy[i]
   const oscillatorType = e.target.value.toLowerCase()
   selectedOscillatorNode.oscillatorNode.type = oscillatorType
-
-  setOscillatorNodes(oscillatorNodesCopy)
-  
+  setOscillatorNodes(oscillatorNodeCopy)  
 }
 
   //change volume of individual oscillators
@@ -122,10 +120,6 @@ const changeOscillatorType = (e, value) => {
     const oscillatorNodeCopy = [...oscillatorNodes]
     const selectedOscillatorNode = oscillatorNodeCopy[i]
     if(selectedOscillatorNode.onOffNode.gain.value === 0) {  
-      // if(selectedOscillatorNode.oscillatorGainNode.gain.value === 0 ) {
-      //   selectedOscillatorNode.oscillatorGainNode.gain.setValueAtTime(.5, Audio.context.currentTime)
-      // }
-  
       selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, Audio.context.currentTime)  
       setOscillatorNodes(oscillatorNodeCopy)
       playing[i] = "Pause"

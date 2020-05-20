@@ -7,9 +7,7 @@ import { Grid } from '@material-ui/core'
 
 ReactDOM.render(
   <React.StrictMode>
-
-        <App />
-
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

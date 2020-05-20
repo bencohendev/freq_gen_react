@@ -91,6 +91,17 @@ const changeVolume = (e, value, i) => {
   setOscillatorNodes(oscillatorNodeCopy)
 }
 
+const changeOscillatorType = (e) => {  
+  console.log(e)
+
+  const oscillatorNodeCopy = [...oscillatorNodes]
+  const selectedOscillatorNode = oscillatorNodeCopy[0]
+  const oscillatorType = e.target.value.toLowerCase()
+  selectedOscillatorNode.oscillatorNode.type = oscillatorType
+  setOscillatorNodes(oscillatorNodeCopy)  
+}
+
+
 
 const changeMinFrequency = (e) => {
   if(typeof e === 'object') {
@@ -197,8 +208,7 @@ useEffect(() => {
               setTimeout(() => {
                 selectedOscillatorNode.seriesGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
               }, (bpm - (bpm/4)));
-              console.log(bpm)
-              console.log(numberOfPitches)
+
           }, (bpm));
           
           return () => clearInterval(intervalID)
@@ -222,6 +232,7 @@ useEffect(() => {
                   setPlaying(['Play'])
                   setIsPlaying(false)
                   selectedOscillatorNode.seriesGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
+                  selectedOscillatorNode.onOffNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
                   return
                   }, (bpm*i));
               }    
@@ -288,6 +299,7 @@ useEffect(() => {
       changeNumberOfPitches={changeNumberOfPitches} 
       changeBpm={changeBpm} 
       changeInfinitePitchSets={changeInfinitePitchSets} 
+      changeOscillatorType={changeOscillatorType}
     />
   )
 }

@@ -2,11 +2,13 @@ import React from 'react'
 import { Grid, Paper, Typography, FormControl, Button, Select, Input, Checkbox } from '@material-ui/core';
 import { Volume } from '../../components/Volume'
 import { Play } from '../../components/Play'
+import { OscillatorType } from '../../components/OscillatorType'
+
 
 
 export const SeriesPlayer = (props) => {
 
-  const { oscillatorNodes, playPauseWrapper, playing, changeVolume, instrumentSelector, minFrequency, maxFrequency, changeMinFrequency, changeMaxFrequency, pitchArray, changeNumberOfPitches, changeBpm, changeInfinitePitchSets } = props
+  const { oscillatorNodes, playPauseWrapper, playing, changeVolume, instrumentSelector, minFrequency, maxFrequency, changeMinFrequency, changeMaxFrequency, pitchArray, changeNumberOfPitches, changeBpm, changeInfinitePitchSets, changeOscillatorType } = props
   const oscillatorNode = oscillatorNodes[0] ? oscillatorNodes[0] : null
 
   return (
@@ -108,6 +110,11 @@ export const SeriesPlayer = (props) => {
           <Checkbox
             onChange={(e) => changeInfinitePitchSets(e)}
           />
+          </Grid>
+        </Grid>
+        <Grid container spacing={6} justify="center">
+          <Grid item xs={6}>
+            <OscillatorType oscillatorNodes={oscillatorNodes} changeOscillatorType={changeOscillatorType} i={0}/>
           </Grid>
         </Grid>
         <Grid container spacing={6} justify="center">

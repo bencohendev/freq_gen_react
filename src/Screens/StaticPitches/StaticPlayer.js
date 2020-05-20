@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Paper, Button, Slider } from '@material-ui/core';
+import { Grid, Paper, Button, Slider, Select } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import FrequencySelector from './FrequencySelector'
 import FrequencySlider from './FrequencySlider'
@@ -33,7 +33,7 @@ export const StaticPlayer = (props) => {
                   <Play oscillatorNodes={oscillatorNodes} playPauseWrapper={playPauseWrapper} playing={playing} i={i}/>
                 </Grid>
                 <Grid item xs={12} lg={1} className="play-container">
-                    <OscillatorType oscillatorNodes={oscillatorNodes} changeOscillatorType={changeOscillatorType} i={i}/>
+                    <OscillatorType oscillatorNodes={oscillatorNodes} changeOscillatorType={(e, value)=>changeOscillatorType(e, value, i)} i={i}/>
                 </Grid>
                 <Grid item xs={12} lg={4} key={`volume-${i}`}>
                   <Volume oscillatorNodes={oscillatorNodes} changeVolume={changeVolume} i={i}/>
@@ -56,14 +56,15 @@ export const StaticPlayer = (props) => {
 
                 </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <div className="row center">
+              <Grid container justify="center">
+                <Grid item xs={9}>
                   <FrequencySlider oscillator={node.oscillatorNode} oscillatorIndex={i} changeFrequency={(e, value) => changeFrequency(e, value, i)} />
-                </div>
-                <div className="row center">
-                  <FrequencySelector key={`selector-${i}`} frequency={frequency} oscillatorIndex={i} changeFrequency={(e, value) => changeFrequency(e, value, i)} />
-                </div>
+                </Grid>
               </Grid>
+              <Grid item xs={12}>
+                <FrequencySelector key={`selector-${i}`} frequency={frequency} oscillatorIndex={i} changeFrequency={(e, value) => changeFrequency(e, value, i)} />
+              </Grid>
+           
             </Grid>
           </Grid>
         </Paper>
