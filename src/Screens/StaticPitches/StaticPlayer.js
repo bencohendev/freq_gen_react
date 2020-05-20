@@ -3,12 +3,12 @@ import { Grid, Paper, Button, Slider } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import FrequencySelector from './FrequencySelector'
 import FrequencySlider from './FrequencySlider'
-
+import { Volume } from '../../components/Volume'
 
 export const StaticPlayer = (props) => {
 
-  const { createNode,  deleteOscillator, oscillatorNodes, changeVolume, changePan, frequency, changeFrequency, playPause, playing } = props
-
+  const { createNode, deleteOscillator, oscillatorNodes, changeVolume, changePan, frequency, changeFrequency, playPause, playing } = props
+  console.log(oscillatorNodes)
 
   return (
     <div className="main">
@@ -28,7 +28,7 @@ export const StaticPlayer = (props) => {
           <Grid container wrap="nowrap" alignItems="center" >
             <Grid item xs={12}>
               <Grid container wrap="nowrap" alignItems="center" justify="center" spacing={3}>
-                <Grid item xs={1} className="play-container">
+                <Grid item xs={12} lg={1} className="play-container">
                   <Button
                     key={`start-${i}`}
                     variant="contained"
@@ -41,18 +41,10 @@ export const StaticPlayer = (props) => {
                       : 'Pause'}
                   </Button>
                 </Grid>
-                <Grid item xs={4} key={`volume-${i}`}>
-                  <div className="slider-label">Volume</div>
-                  <Slider
-                    aria-labelledby="continuous-slider"
-                    className='oscillator-control-item'
-                    min={0}
-                    max={100}
-                    value={node.gain}
-                    onChange={(e, value) => changeVolume(e, value, i)}
-                  />
+                <Grid item xs={12} lg={4} key={`volume-${i}`}>
+                <Volume oscillatorNodes={oscillatorNodes} changeVolume={changeVolume} i={i}/>
                 </Grid>
-                <Grid item xs={4} key={`pan-${i}`}>
+                <Grid item xs={12} lg={4} key={`pan-${i}`}>
                   <div className="slider-label">Pan</div>
                   <Slider
                     aria-labelledby="continuous-slider"

@@ -38,10 +38,6 @@
   list-style-type:none;
 }
 
-.main {
-  margin: 20px 100px; 
-  width: 60%;
-}
 .center {
   display: flex;
   flex-wrap: nowrap;

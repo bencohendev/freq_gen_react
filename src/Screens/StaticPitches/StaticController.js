@@ -13,20 +13,16 @@ export const StaticController = () => {
   const createNode = () => {
 
     const oscillatorNode = Audio.context.createOscillator();
-
     //create nodes. oscillatorGainNode used for volume control. onOffNode used for playing and pausing. Pan Node for panning
     const oscillatorGainNode = Audio.context.createGain()
     const onOffNode = Audio.context.createGain()
     const panNode = Audio.context.createPanner()
-
-
 
     //initialize node values
     oscillatorGainNode.gain.setValueAtTime(.5, Audio.context.currentTime)
     onOffNode.gain.setValueAtTime(0, Audio.context.currentTime)      
     panNode.panningModel = 'equalpower'
     panNode.setPosition(0, 0, 0)
-
 
     //connect node chain
     oscillatorNode.connect(oscillatorGainNode)
@@ -68,7 +64,6 @@ export const StaticController = () => {
 
   //change volume of individual oscillators
   const changeVolume = (e, value, i) => {
-
     const oscillatorNodeCopy = [...oscillatorNodes]
     const selectedOscillatorNode = oscillatorNodeCopy[i]
 
@@ -81,7 +76,6 @@ export const StaticController = () => {
   const changePan = (e, value, i) => {
     const oscillatorNodeCopy = [...oscillatorNodes]
     const selectedOscillatorNode = oscillatorNodeCopy[i]
-    console.log(selectedOscillatorNode.oscillatorPanNode)
     selectedOscillatorNode.oscillatorPanNode.setPosition(value/100, 0 ,0)
     selectedOscillatorNode.pan = value / 100
     setOscillatorNodes(oscillatorNodeCopy)

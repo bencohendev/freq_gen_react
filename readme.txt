@@ -1,3 +1,3 @@
 -get frequency slider on a log scale for visual effect
--add a remove button to oscillators
--fix gain value on volume slider. it initializes at .5 out of 100
+-allow click outside of popper box to close box on frequency selector
+
