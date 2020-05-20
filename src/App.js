@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Switch, Route, NavLink } from "react-router-dom";
 import { StaticController } from './Screens/StaticPitches/StaticController'
 import { SeriesController } from './Screens/PitchSeries/SeriesController'
+import { Grid } from '@material-ui/core'
 
 
 const activeStyle = {
@@ -41,15 +42,18 @@ function App() {
               </li>             
             </ul>
           </nav>
-
-        <Switch>
-        <Route path="/series">
-            <SeriesController />
-          </Route>
-          <Route path="/">
-            <StaticController />
-          </Route>
-        </Switch>
+          <Grid container justify="center">
+            <Grid item xs={11} lg={10}>
+              <Switch>
+              <Route path="/series">
+                  <SeriesController />
+                </Route>
+                <Route path="/">
+                  <StaticController />
+                </Route>
+              </Switch>
+            </Grid>
+          </Grid>
       </div>
     </Router>
   );

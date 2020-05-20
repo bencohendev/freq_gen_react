@@ -4,12 +4,13 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import FrequencySelector from './FrequencySelector'
 import FrequencySlider from './FrequencySlider'
 import { Volume } from '../../components/Volume'
+import { Play } from '../../components/Play'
+import { OscillatorType } from '../../components/OscillatorType'
+
 
 export const StaticPlayer = (props) => {
 
-  const { createNode, deleteOscillator, oscillatorNodes, changeVolume, changePan, frequency, changeFrequency, playPause, playing } = props
-  console.log(oscillatorNodes)
-
+  const { createNode, deleteOscillator, oscillatorNodes, changeOscillatorType, changeVolume, changePan, frequency, changeFrequency, playPauseWrapper, playing } = props
   return (
     <div className="main">
       <Grid>
@@ -29,20 +30,13 @@ export const StaticPlayer = (props) => {
             <Grid item xs={12}>
               <Grid container wrap="nowrap" alignItems="center" justify="center" spacing={3}>
                 <Grid item xs={12} lg={1} className="play-container">
-                  <Button
-                    key={`start-${i}`}
-                    variant="contained"
-                    color="primary"
-                    onClick={() => playPause(node, i)}
-                    className="oscillator-control-item"
-                  >
-                    {playing[i] === 'Play'
-                      ? 'Play'
-                      : 'Pause'}
-                  </Button>
+                  <Play oscillatorNodes={oscillatorNodes} playPauseWrapper={playPauseWrapper} playing={playing} i={i}/>
+                </Grid>
+                <Grid item xs={12} lg={1} className="play-container">
+                    <OscillatorType oscillatorNodes={oscillatorNodes} changeOscillatorType={changeOscillatorType} i={i}/>
                 </Grid>
                 <Grid item xs={12} lg={4} key={`volume-${i}`}>
-                <Volume oscillatorNodes={oscillatorNodes} changeVolume={changeVolume} i={i}/>
+                  <Volume oscillatorNodes={oscillatorNodes} changeVolume={changeVolume} i={i}/>
                 </Grid>
                 <Grid item xs={12} lg={4} key={`pan-${i}`}>
                   <div className="slider-label">Pan</div>

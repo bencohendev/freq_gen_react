@@ -5,7 +5,6 @@ import { StaticPlayer } from './StaticPlayer'
 export const StaticController = () => {
 
   const [oscillatorNodes, setOscillatorNodes] = useState([])
-  const [oscillatorGainNodes, setOscillatorGainNodes] = useState([])
   const [frequency, setFrequency] = useState(440)
   const [playing, setPlaying] = useState([])
 
@@ -45,7 +44,6 @@ export const StaticController = () => {
   }
 
     setOscillatorNodes([...oscillatorNodes, oscillatorNodeValues])
-    setOscillatorGainNodes([...oscillatorGainNodes, oscillatorGainNode])
     setPlaying([...playing, 'Play'])
   }
 
@@ -59,17 +57,27 @@ export const StaticController = () => {
       actualPlayPause(deletedNode, i)
     }
     setOscillatorNodes(oscillatorNodeCopy)
-
   }
+
+const changeOscillatorType = (e, value) => {
+  console.log(e)   
+  console.log(value)    
+  const oscillatorNodesCopy = [...oscillatorNodes]
+  const selectedOscillatorNode = oscillatorNodesCopy[0]
+  const oscillatorType = e.target.value.toLowerCase()
+  selectedOscillatorNode.oscillatorNode.type = oscillatorType
+
+  setOscillatorNodes(oscillatorNodesCopy)
+  
+}
 
   //change volume of individual oscillators
   const changeVolume = (e, value, i) => {
     const oscillatorNodeCopy = [...oscillatorNodes]
     const selectedOscillatorNode = oscillatorNodeCopy[i]
-
     selectedOscillatorNode.oscillatorGainNode.gain.setValueAtTime(value/100, Audio.context.currentTime)
-     selectedOscillatorNode.gain = value
-     setOscillatorNodes(oscillatorNodeCopy)
+    selectedOscillatorNode.gain = value
+    setOscillatorNodes(oscillatorNodeCopy)
   }
 
   //change pan of individual oscillators
@@ -99,25 +107,24 @@ export const StaticController = () => {
   }
 
   //play or pause by turning onOffNode to 1 or 0 respectively
-  const playPause = (node, i) => {
+  const playPauseWrapper = (node, i) => {
     if(Audio.context.state === 'suspended') {
-    Audio.context.resume()
-    .then(() => {
+      Audio.context.resume()
+      .then(() => {
+        actualPlayPause(node, i)
+    })
+    } else {
       actualPlayPause(node, i)
-  })
-  } else {
-    actualPlayPause(node, i)
-  }
+    }
   }
 
   const actualPlayPause = (node, i) => {
     const oscillatorNodeCopy = [...oscillatorNodes]
     const selectedOscillatorNode = oscillatorNodeCopy[i]
-
     if(selectedOscillatorNode.onOffNode.gain.value === 0) {  
-      if(selectedOscillatorNode.oscillatorGainNode.gain.value === 0 ) {
-        selectedOscillatorNode.oscillatorGainNode.gain.setValueAtTime(.5, Audio.context.currentTime)
-      }
+      // if(selectedOscillatorNode.oscillatorGainNode.gain.value === 0 ) {
+      //   selectedOscillatorNode.oscillatorGainNode.gain.setValueAtTime(.5, Audio.context.currentTime)
+      // }
   
       selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, Audio.context.currentTime)  
       setOscillatorNodes(oscillatorNodeCopy)
@@ -134,6 +141,16 @@ export const StaticController = () => {
   }
 
   return (
-    <StaticPlayer createNode={createNode} deleteOscillator={deleteOscillator} oscillatorNodes={oscillatorNodes} oscillatorGainNodes={oscillatorGainNodes} setOscillatorGainNodes={setOscillatorGainNodes} changeVolume={changeVolume} changePan={changePan} frequency={frequency} changeFrequency={changeFrequency} playPause={playPause} playing={playing}/>
+    <StaticPlayer 
+    createNode={createNode} 
+    deleteOscillator={deleteOscillator}
+    changeOscillatorType={changeOscillatorType}
+    oscillatorNodes={oscillatorNodes} 
+    changeVolume={changeVolume}
+    changePan={changePan} 
+    frequency={frequency} 
+    changeFrequency={changeFrequency} 
+    playPauseWrapper={playPauseWrapper} 
+    playing={playing}/>
   )
 }

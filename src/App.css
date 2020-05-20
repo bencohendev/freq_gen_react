@@ -3,22 +3,8 @@
   text-align: center;
 }
 
-.header {
-  background-color: #282c34;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.pitch-row {
-  margin: 10px;
-}
-
-.pitch-btn {
-  margin: 1px;
+.nav {
+  margin-bottom: 80px;
 }
 
 .nav-link {
@@ -36,6 +22,25 @@
 .nav-li {
   float: left;  
   list-style-type:none;
+  margin-right: 10px;
+}
+
+.header {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.pitch-row {
+  margin: 10px;
+}
+
+.pitch-btn {
+  margin: 1px;
 }
 
 .center {

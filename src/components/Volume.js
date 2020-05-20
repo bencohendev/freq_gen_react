@@ -5,7 +5,6 @@ export const Volume = (props) => {
 
   const {oscillatorNodes, changeVolume, i} = props
   const oscillatorNode = i ? oscillatorNodes[i] : oscillatorNodes[0]
-  
   return(
     <div>
     <div className="slider-label">Volume</div>
@@ -15,7 +14,7 @@ export const Volume = (props) => {
         min={0}
         max={100}
         value={oscillatorNode.gain}
-        onChange={(e, value) => changeVolume(e, value)}
+        onChange={(e, value) => changeVolume(e, value, i)}
       />
     </div>
   )
