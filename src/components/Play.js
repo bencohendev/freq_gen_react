@@ -5,7 +5,6 @@ export const Play = (props) => {
 
   const {oscillatorNodes, playPauseWrapper, playing, i} = props
   const oscillatorNode = oscillatorNodes[i]
-  console.log(playing)
   return (
     <Button
       key={`play-button-${i}`}
