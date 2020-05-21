@@ -16,7 +16,7 @@ export const StaticPlayer = (props) => {
       <Grid>
         <div className="create-oscillator-btn">
           <Button
-            onClick={()=>createNode()}
+            onClick={() => createNode()}
             color="secondary"
             variant="contained"
           >
@@ -26,46 +26,40 @@ export const StaticPlayer = (props) => {
       </Grid>
       {oscillatorNodes.map((node, i) => (
         <Paper key={i} elevation={3} className="oscillator-container">
-          <Grid container wrap="nowrap" alignItems="center" >
-            <Grid item xs={12}>
-              <Grid container wrap="nowrap" alignItems="center" justify="center" spacing={3}>
-                <Grid item xs={12} lg={1} className="play-container">
-                  <Play oscillatorNodes={oscillatorNodes} playPauseWrapper={playPauseWrapper} playing={playing} i={i}/>
-                </Grid>
-                <Grid item xs={12} lg={1} className="play-container">
-                    <OscillatorType oscillatorNodes={oscillatorNodes} changeOscillatorType={(e, value)=>changeOscillatorType(e, value, i)} i={i}/>
-                </Grid>
-                <Grid item xs={12} lg={4} key={`volume-${i}`}>
-                  <Volume oscillatorNodes={oscillatorNodes} changeVolume={changeVolume} i={i}/>
-                </Grid>
-                <Grid item xs={12} lg={4} key={`pan-${i}`}>
-                  <div className="slider-label">Pan</div>
-                  <Slider
-                    aria-labelledby="continuous-slider"
-                    className='oscillator-control-item'
-                    min={-100}
-                    max={100}
-                    value={node.pan * 100}
-                    onChange={(e, value) => changePan(e, value, i)}
-                  />
-                </Grid>
-                <Grid item key={`remove-${i}`}>
-                  <Button onClick={()=>deleteOscillator(i)}>
-                    <HighlightOffIcon></HighlightOffIcon>
-                  </Button>
-
-                </Grid>
-              </Grid>
-              <Grid container justify="center">
-                <Grid item xs={9}>
-                  <FrequencySlider oscillator={node.oscillatorNode} oscillatorIndex={i} changeFrequency={(e, value) => changeFrequency(e, value, i)} />
-                </Grid>
-              </Grid>
-              <Grid item xs={12}>
-                <FrequencySelector key={`selector-${i}`} frequency={frequency} oscillatorIndex={i} changeFrequency={(e, value) => changeFrequency(e, value, i)} />
-              </Grid>
-           
+          <Grid container spacing={6} justify="center">
+            <Grid item xs={2} md={1} key={`remove-${i}`}>
+              <Button onClick={() => deleteOscillator(i)}>
+                <HighlightOffIcon></HighlightOffIcon>
+              </Button>
             </Grid>
+            <Grid item xs={4} md={2} className="play-container">
+              <Play oscillatorNodes={oscillatorNodes} playPauseWrapper={playPauseWrapper} playing={playing} i={i} />
+            </Grid>
+            <Grid item xs={4} md={2} className="play-container">
+              <OscillatorType oscillatorNodes={oscillatorNodes} changeOscillatorType={(e, value) => changeOscillatorType(e, value, i)} i={i} />
+            </Grid>
+            <Grid item xs={4} md={3} key={`volume-${i}`}>
+              <Volume oscillatorNodes={oscillatorNodes} changeVolume={changeVolume} i={i} />
+            </Grid>
+            <Grid item xs={4} md={3} key={`pan-${i}`}>
+              <div className="slider-label">Pan</div>
+              <Slider
+                aria-labelledby="continuous-slider"
+                className='oscillator-control-item'
+                min={-100}
+                max={100}
+                value={node.pan * 100}
+                onChange={(e, value) => changePan(e, value, i)}
+              />
+            </Grid>
+          <Grid container justify="center">
+            <Grid item xs={9}>
+              <FrequencySlider oscillator={node.oscillatorNode} oscillatorIndex={i} changeFrequency={(e, value) => changeFrequency(e, value, i)} />
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <FrequencySelector key={`selector-${i}`} frequency={frequency} oscillatorIndex={i} changeFrequency={(e, value) => changeFrequency(e, value, i)} />
+          </Grid>
           </Grid>
         </Paper>
       ))}

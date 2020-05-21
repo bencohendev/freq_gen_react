@@ -33,9 +33,10 @@ export const SeriesPlayer = (props) => {
             </Grid>
           </Grid>
           <Grid container spacing={6} justify='center'>
-          <Grid item lg={3}>
+          <Grid item md={2}>
             <Select
               native
+              className="frequency-range-selector"
               value={minFrequency}
               onChange={(e) => changeMinFrequency(e)}
             >
@@ -55,9 +56,10 @@ export const SeriesPlayer = (props) => {
               }
             </Select>
           </Grid>
-          <Grid item lg={3}>
+          <Grid item md={2}>
             <Select
               native
+              className="frequency-range-selector"
               value={maxFrequency}
               onChange={(e) => changeMaxFrequency(e)}
             >

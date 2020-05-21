@@ -11,12 +11,14 @@ const FrequencySlider = (props) => {
       <p>Frequency Slider </p>
       <Slider
         aria-labelledby="continuous-slider"
-        min={0}
-        max={18000}
-        value={oscillator.frequency.value}
+        min={3}
+        max={14.5}
+        step={.0001}
+        value={Math.log2(oscillator.frequency.value)}
         onChange={(e, value) => changeFrequency(e, value, oscillatorIndex)}
         className='frequency'
       />
+      <div>{oscillator.frequency.value}</div>
     </div>
   )
 }

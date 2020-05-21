@@ -17,7 +17,7 @@ function App() {
         <header 
           className="header"
         >
-        Welcome to Ben's Pitch Thingy
+        PITCH GENERATOR
         </header>
           <nav className="nav">
             <ul className='nav-container'>

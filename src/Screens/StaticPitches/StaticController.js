@@ -89,14 +89,16 @@ const changeOscillatorType = (e, value, i) => {
 
   const changeFrequency = (e, value, i) => {
     let newFreq = null
+
     if(typeof e === 'object') {
         e = e.target.value
     }
     if(e) {
       newFreq = e
     } else {
-      newFreq = value
+      newFreq = 2**value
     }
+    console.log(newFreq)
     setFrequency(newFreq)
       const oscillatorNodesCopy = [...oscillatorNodes]
       const selectedOscillatorNode = oscillatorNodesCopy[i]

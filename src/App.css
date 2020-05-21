@@ -54,7 +54,7 @@
   margin-bottom: 40px;
 }
 .oscillator-container {
-  margin-bottom: 20px;
+  margin-bottom: 60px;
 }
 .oscillator-control-item {
   margin: 5px 20px;
@@ -75,4 +75,8 @@
 .pitch-row {
   margin: 5px;
   min-width: 350px;
+}
+
+.frequency-range-selector {
+  width: 100px;
 }
