@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Paper, Typography, FormControl, Button, Select, Input, Checkbox } from '@material-ui/core';
+import { Grid, Paper, Typography, Select, Input, Checkbox } from '@material-ui/core';
 import { Volume } from '../../components/Volume'
 import { Play } from '../../components/Play'
 import { OscillatorType } from '../../components/OscillatorType'

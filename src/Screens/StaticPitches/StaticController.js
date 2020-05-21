@@ -40,9 +40,8 @@ export const StaticController = () => {
       frequency: oscillatorNode.frequency.value,
       type: oscillatorNode.type,
       gain: 50,
-      pan: 0      
+      pan: 0,
   }
-
     setOscillatorNodes([...oscillatorNodes, oscillatorNodeValues])
     setPlaying([...playing, 'Play'])
   }
@@ -98,11 +97,11 @@ const changeOscillatorType = (e, value, i) => {
     } else {
       newFreq = 2**value
     }
-    console.log(newFreq)
     setFrequency(newFreq)
       const oscillatorNodesCopy = [...oscillatorNodes]
       const selectedOscillatorNode = oscillatorNodesCopy[i]
       selectedOscillatorNode.oscillatorNode.frequency.setValueAtTime(newFreq, Audio.context.currentTime)
+      selectedOscillatorNode.frequency = newFreq
       setOscillatorNodes(oscillatorNodesCopy)
   }
 
@@ -122,17 +121,16 @@ const changeOscillatorType = (e, value, i) => {
     const oscillatorNodeCopy = [...oscillatorNodes]
     const selectedOscillatorNode = oscillatorNodeCopy[i]
     if(selectedOscillatorNode.onOffNode.gain.value === 0) {  
-      selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, Audio.context.currentTime)  
-      setOscillatorNodes(oscillatorNodeCopy)
-      playing[i] = "Pause"
+      selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, Audio.context.currentTime)
+      playing[i] = "Pause" 
       setPlaying(playing)
-  
+      setOscillatorNodes(oscillatorNodeCopy)
     } else if(selectedOscillatorNode.onOffNode.gain.value > 0) {
   
       selectedOscillatorNode.onOffNode.gain.setValueAtTime(0, Audio.context.currentTime)
-       setOscillatorNodes(oscillatorNodeCopy)
-       playing[i] = "Play"
-       setPlaying(playing)
+      playing[i] = "Play"
+      setPlaying(playing)
+      setOscillatorNodes(oscillatorNodeCopy)
     }
   }
 

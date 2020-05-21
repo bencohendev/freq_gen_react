@@ -3,7 +3,7 @@ import { Select } from '@material-ui/core'
 
 export const OscillatorType = (props) => {
 
-    const {oscillatorNodes, changeOscillatorType, i} = props
+    const {changeOscillatorType, i} = props
     return (
         <Select
           native

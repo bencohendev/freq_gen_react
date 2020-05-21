@@ -92,8 +92,6 @@ const changeVolume = (e, value, i) => {
 }
 
 const changeOscillatorType = (e) => {  
-  console.log(e)
-
   const oscillatorNodeCopy = [...oscillatorNodes]
   const selectedOscillatorNode = oscillatorNodeCopy[0]
   const oscillatorType = e.target.value.toLowerCase()
