@@ -3,7 +3,7 @@ import { Slider } from '@material-ui/core';
 import '../../App.css'
 
 
-const FrequencySlider = (props) => {
+export const FrequencySlider = (props) => {
 
   const { oscillatorNodes, i, changeFrequency } = props
   const oscillator = i ? oscillatorNodes[i] : oscillatorNodes[0]
@@ -24,6 +24,3 @@ const FrequencySlider = (props) => {
     </div>
   )
 }
-
-export default FrequencySlider
-

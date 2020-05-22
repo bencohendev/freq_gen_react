@@ -73,8 +73,7 @@
 }
 
 .pitch-row {
-  margin: 5px;
-  min-width: 350px;
+  margin-bottom: 15px;
 }
 
 .frequency-range-selector {

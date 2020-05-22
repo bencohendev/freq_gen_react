@@ -1,12 +1,11 @@
 import React from 'react'
 import { Grid, Paper, Button, Slider } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import FrequencySelector from './FrequencySelector'
-import FrequencySlider from './FrequencySlider'
+import { FrequencySelector } from './FrequencySelector'
+import { FrequencySlider } from './FrequencySlider'
 import { Volume } from '../../components/Volume'
 import { Play } from '../../components/Play'
 import { OscillatorType } from '../../components/OscillatorType'
-
 
 export const StaticPlayer = (props) => {
 
