@@ -10,7 +10,7 @@ export const FrequencySlider = (props) => {
   const frequency = oscillator.frequency
   return (
     <div>
-      <p>Frequency Slider </p>
+      <p className="field-label">Frequency Slider </p>
       <Slider
         aria-labelledby="continuous-slider"
         min={3}

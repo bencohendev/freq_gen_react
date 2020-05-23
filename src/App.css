@@ -42,7 +42,6 @@
 .pitch-btn {
   margin: 1px;
 }
-
 .center {
   display: flex;
   flex-wrap: nowrap;
@@ -56,26 +55,29 @@
 .oscillator-container {
   margin-bottom: 60px;
 }
-.oscillator-control-item {
-  margin: 5px 20px;
-  padding: 5px;
-}
-.slider-label {
-  text-align: center;
-}
-
-.pitch-select-btn {
+.oscillator-control-container {
   margin-bottom: 20px;
 }
 
+.green-btn {
+  background-color: #0CB64C !important;
+  color: white !important;
+}
+
+.field-label {
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+.pitch-select-btn {
+  margin-bottom: 20px;
+}
 .pitch-btn {
   margin: 2px;
 }
-
 .pitch-row {
   margin-bottom: 15px;
 }
-
 .frequency-range-selector {
   width: 100px;
 }

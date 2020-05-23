@@ -7,10 +7,9 @@ export const Volume = (props) => {
   const oscillatorNode = i ? oscillatorNodes[i] : oscillatorNodes[0]
   return(
     <div>
-    <div className="slider-label">Volume</div>
+    <div className="field-label">Volume</div>
       <Slider
         aria-labelledby="continuous-slider"
-        className='oscillator-control-item'
         min={0}
         max={100}
         value={oscillatorNode.gain}

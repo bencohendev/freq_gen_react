@@ -49,6 +49,12 @@ export const StaticController = () => {
   //creates an oscillator on page load
   useEffect(createNode, [])
 
+  const suspendContext = () => {
+    Audio.context.suspend()
+  }
+
+  useEffect(suspendContext, [])
+
   const deleteOscillator = (i) => {
     const oscillatorNodeCopy = [...oscillatorNodes]
     const deletedNode = oscillatorNodeCopy.splice(i, 1)
@@ -74,6 +80,17 @@ const changeOscillatorType = (e, value, i) => {
     const selectedOscillatorNode = oscillatorNodeCopy[i]
     selectedOscillatorNode.oscillatorGainNode.gain.setValueAtTime(value/100, Audio.context.currentTime)
     selectedOscillatorNode.gain = value
+    setOscillatorNodes(oscillatorNodeCopy)
+  }
+
+  const muteAll = () => {
+    const oscillatorNodeCopy = [...oscillatorNodes]
+
+    oscillatorNodeCopy.map((node, i) => {
+      node.onOffNode.gain.setValueAtTime(0, Audio.context.currentTime)
+      playing[i] = 'Play'
+    })
+    setPlaying(playing)
     setOscillatorNodes(oscillatorNodeCopy)
   }
 
@@ -104,6 +121,7 @@ const changeOscillatorType = (e, value, i) => {
       selectedOscillatorNode.frequency = newFreq
       setOscillatorNodes(oscillatorNodesCopy)
   }
+
 
   //play or pause by turning onOffNode to 1 or 0 respectively
   const playPauseWrapper = (node, i) => {
@@ -141,6 +159,7 @@ const changeOscillatorType = (e, value, i) => {
     changeOscillatorType={changeOscillatorType}
     oscillatorNodes={oscillatorNodes} 
     changeVolume={changeVolume}
+    muteAll={muteAll}
     changePan={changePan} 
     frequency={frequency} 
     changeFrequency={changeFrequency} 

@@ -12,7 +12,7 @@ const activeStyle = {
 
 function App() {
   return (
-    <Router>
+    <Router forceRefresh={true}>
       <div className="App">
         <header 
           className="header"

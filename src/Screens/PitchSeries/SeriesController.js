@@ -64,6 +64,12 @@ export const SeriesController = () => {
   //creates an oscillator on page load
   useEffect(createNode, [])
 
+  const suspendContext = () => {
+    Audio.context.suspend()
+  }
+
+  useEffect(suspendContext, [])
+
   const populateAllPitches = () => {
     let fundamentalPitches = [32.703, 34.648, 36.708, 38.891, 41.203, 43.454, 46.249, 48.999, 51.913, 55, 58.270, 61.735]
     const pitchNames = ['c' , 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b']
