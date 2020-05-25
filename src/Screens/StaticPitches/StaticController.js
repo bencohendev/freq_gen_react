@@ -5,51 +5,74 @@ import { StaticPlayer } from './StaticPlayer'
 export const StaticController = () => {
 
   const [oscillatorNodes, setOscillatorNodes] = useState([])
+  const [oscillatorNodeValues, setOscillatorNodeValues] = useState([])
   const [frequency, setFrequency] = useState(440)
   const [playing, setPlaying] = useState([])
 
   //creates a new oscillator node
-  const createNode = () => {
+  const createNode = (freq, nodesToMake) => {
+    let oscillatorNodeValueArray = []
+    nodesToMake ? nodesToMake = nodesToMake : nodesToMake = 0
+    freq ? freq = freq : freq = [440]
 
-    const oscillatorNode = Audio.context.createOscillator();
-    //create nodes. oscillatorGainNode used for volume control. onOffNode used for playing and pausing. Pan Node for panning
-    const oscillatorGainNode = Audio.context.createGain()
-    const onOffNode = Audio.context.createGain()
-    const panNode = Audio.context.createPanner()
+    for(let i=0; i<=nodesToMake; i++) {
+      const oscillatorNode = Audio.context.createOscillator();
+      //create nodes. oscillatorGainNode used for volume control. onOffNode used for playing and pausing. Pan Node for panning
+      const oscillatorGainNode = Audio.context.createGain()
+      const onOffNode = Audio.context.createGain()
+      const panNode = Audio.context.createPanner()
 
-    //initialize node values
-    oscillatorGainNode.gain.setValueAtTime(.5, Audio.context.currentTime)
-    onOffNode.gain.setValueAtTime(0, Audio.context.currentTime)      
-    panNode.panningModel = 'equalpower'
-    panNode.setPosition(0, 0, 0)
+      //initialize node values
+      oscillatorGainNode.gain.setValueAtTime(.5, Audio.context.currentTime)
+      onOffNode.gain.setValueAtTime(0, Audio.context.currentTime)      
+      panNode.panningModel = 'equalpower'
+      panNode.setPosition(0, 0, 0)
 
-    //connect node chain
-    oscillatorNode.connect(oscillatorGainNode)
-    oscillatorGainNode.connect(onOffNode)   
-    onOffNode.connect(panNode)
-    panNode.connect(Audio.context.destination)
+      //connect node chain
+      oscillatorNode.connect(oscillatorGainNode)
+      oscillatorGainNode.connect(onOffNode)   
+      onOffNode.connect(panNode)
+      panNode.connect(Audio.context.destination)
 
-    oscillatorNode.start()
+      oscillatorNode.start()
+      
+      oscillatorNode.frequency.setValueAtTime(freq[i], Audio.context.currentTime)
 
-    //saves oscillator values as object that can be manipulated later
-    const oscillatorNodeValues = {
-      oscillatorNode: oscillatorNode,
-      onOffNode: onOffNode,
-      oscillatorGainNode: oscillatorGainNode,
-      oscillatorPanNode: panNode,
-      frequency: oscillatorNode.frequency.value,
-      type: oscillatorNode.type,
-      gain: 50,
-      pan: 0,
-  }
-    setOscillatorNodes([...oscillatorNodes, oscillatorNodeValues])
+      //saves oscillator values as object that can be manipulated later
+      const oscillatorNodeValues = {
+        oscillatorNode: oscillatorNode,
+        onOffNode: onOffNode,
+        oscillatorGainNode: oscillatorGainNode,
+        oscillatorPanNode: panNode,
+        frequency: freq[i],
+        type: 'sine',
+        gain: 50,
+        pan: 
+        0,
+    }
+    oscillatorNodeValueArray = [...oscillatorNodeValueArray, oscillatorNodeValues]
+}
+  setOscillatorNodeValues(oscillatorNodeValueArray)
+}
+
+
+  const createNodePromise = async () =>  {
+    const newNode = await createNode()
+    const oscillatorNodesMerge = oscillatorNodes.concat(newNode)
+    setOscillatorNodes(oscillatorNodesMerge)
     setPlaying([...playing, 'Play'])
-  }
+    return 'resolved'
+ }
 
-  //creates an oscillator on page load
-  useEffect(createNode, [])
+useEffect(createNode, [])
 
-  const suspendContext = () => {
+useEffect(()=>{
+  const oscillatorNodesMerge = oscillatorNodes.concat(oscillatorNodeValues)
+  setOscillatorNodes(oscillatorNodesMerge)
+  setPlaying([...playing, 'Play'])
+}, [oscillatorNodeValues])
+
+const suspendContext = () => {
     Audio.context.suspend()
   }
 
@@ -123,6 +146,31 @@ const changeOscillatorType = (e, value, i) => {
   }
 
 
+
+  function overtonePreset(e) {
+
+
+    const  _overtonePreset = (freqArray, nodesToMake) => {
+      createNode(freqArray, nodesToMake)
+    }
+
+    const preset = e.target.value
+    switch(preset) {
+      case '1 - 3 - 5':
+        _overtonePreset([207.652, 622.256,  1046.496], 2)
+
+      break;
+      case '1 - 3 - 5 - 8':
+        return null
+      break;
+      default:
+        return null
+    }
+
+
+  }
+
+
   //play or pause by turning onOffNode to 1 or 0 respectively
   const playPauseWrapper = (node, i) => {
     if(Audio.context.state === 'suspended') {
@@ -154,7 +202,7 @@ const changeOscillatorType = (e, value, i) => {
 
   return (
     <StaticPlayer 
-    createNode={createNode} 
+    createNodePromise={createNodePromise} 
     deleteOscillator={deleteOscillator}
     changeOscillatorType={changeOscillatorType}
     oscillatorNodes={oscillatorNodes} 
@@ -163,6 +211,7 @@ const changeOscillatorType = (e, value, i) => {
     changePan={changePan} 
     frequency={frequency} 
     changeFrequency={changeFrequency} 
+    overtonePreset={overtonePreset}
     playPauseWrapper={playPauseWrapper} 
     playing={playing}/>
   )
