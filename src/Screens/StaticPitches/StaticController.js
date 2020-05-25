@@ -55,15 +55,6 @@ export const StaticController = () => {
   setOscillatorNodeValues(oscillatorNodeValueArray)
 }
 
-
-  const createNodePromise = async () =>  {
-    const newNode = await createNode()
-    const oscillatorNodesMerge = oscillatorNodes.concat(newNode)
-    setOscillatorNodes(oscillatorNodesMerge)
-    setPlaying([...playing, 'Play'])
-    return 'resolved'
- }
-
 useEffect(createNode, [])
 
 useEffect(()=>{
