@@ -9,7 +9,7 @@ import { OscillatorType } from '../../components/OscillatorType'
 
 export const StaticPlayer = (props) => {
 
-  const { dispatch, nodes, frequency, changeFrequency, overtonePreset, playPauseWrapper, playing } = props
+  const { dispatch, nodes, overtonePreset, playPauseWrapper } = props
   return (
     <div>
       <div className="oscillator-control-container">
@@ -56,7 +56,7 @@ export const StaticPlayer = (props) => {
             </Grid>
           <Grid container spacing={6} justify="center" alignItems="center">
             <Grid item xs={6} md={2} key={`play-${i}`} className="play-container">
-              <Play nodes={nodes} playPauseWrapper={playPauseWrapper} playing={playing} i={i} />
+              <Play nodes={nodes} playPauseWrapper={playPauseWrapper} i={i} />
             </Grid>
             <Grid item xs={6} md={2} key={`type-${i}`} className="play-container">
               <OscillatorType nodes={nodes} dispatch={(value, i)=>dispatch({type: 'oscillator', value, i})} i={i} />
@@ -80,7 +80,7 @@ export const StaticPlayer = (props) => {
             </Grid>
           </Grid>
           <Grid item  xs={12}>
-            <FrequencySelector key={`selector-${i}`} frequency={frequency} oscillatorIndex={i} dispatch={(value, i) => dispatch({type:'frequency-select', value, i})} />
+            <FrequencySelector key={`selector-${i}`} oscillatorIndex={i} dispatch={(value, i) => dispatch({type:'frequency-select', value, i})} />
           </Grid>
           </Grid>
         </Paper>

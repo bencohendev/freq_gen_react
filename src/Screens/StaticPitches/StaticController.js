@@ -115,10 +115,6 @@ return oscillatorNodeValues
 
 export const StaticController = () => {
 
-const [oscillatorNodes, setOscillatorNodes] = useState([])
-const [frequency, setFrequency] = useState(440)
-const [playing, setPlaying] = useState([])
-
   const [nodes, dispatch] = useReducer(
     reducer, 
     [createNode()]
@@ -129,25 +125,6 @@ const [playing, setPlaying] = useState([])
   }
 
   useEffect(suspendContext, [])
-
-  const changeFrequency = (e, value, i) => {
-    let newFreq = null
-
-    if(typeof e === 'object') {
-        e = e.target.value
-    }
-    if(e) {
-      newFreq = e
-    } else {
-      newFreq = 2**value
-    }
-    setFrequency(newFreq)
-      const oscillatorNodesCopy = [...oscillatorNodes]
-      const selectedOscillatorNode = oscillatorNodesCopy[i]
-      selectedOscillatorNode.oscillatorNode.frequency.setValueAtTime(newFreq, Audio.context.currentTime)
-      selectedOscillatorNode.frequency = newFreq
-      setOscillatorNodes(oscillatorNodesCopy)
-  }
 
 
   //play or pause by turning onOffNode to 1 or 0 respectively
@@ -170,10 +147,7 @@ const [playing, setPlaying] = useState([])
     <StaticPlayer 
       dispatch={dispatch}
       nodes={nodes}
-      frequency={frequency} 
-      changeFrequency={changeFrequency} 
       playPauseWrapper={playPauseWrapper} 
-      playing={playing}
     />
   )
 }
