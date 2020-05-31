@@ -8,7 +8,6 @@ export const StaticController = () => {
   function reducer(nodes, action) {
     const oscillatorNodeCopy = [...nodes]
     const selectedOscillatorNode = oscillatorNodeCopy[action.i]
-    console.log(action.i)
     switch (action.type) {
       case 'create':
         const newNode = createNode()
@@ -33,10 +32,9 @@ export const StaticController = () => {
         return nodes
       break
       case 'oscillator':
-        //const oscillatorType = e.target.value.toLowerCase() 
-        //action.e.persist()
-        const oscillatorType = action.value
-        selectedOscillatorNode.type = oscillatorType
+        const oscillatorType = action.value.toLowerCase()
+        selectedOscillatorNode.oscillatorNode.type = oscillatorType
+        console.log(selectedOscillatorNode.oscillatorNode)
         nodes = oscillatorNodeCopy
         return nodes
       break
