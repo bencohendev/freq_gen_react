@@ -24,14 +24,14 @@ export const FrequencySelector = (props) => {
 
   const pitches = [32.703, 34.648, 36.708, 38.891, 41.203, 43.454, 46.249, 48.999, 51.913, 55, 58.270, 61.735]
   const pitchNames = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b']
-  const { changeFrequency, oscillatorIndex } = props
+  const { dispatch, oscillatorIndex } = props
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
   const handleClick = (e, pitch) => {
     setOpen((prev) => !prev);
     if(pitch) {
-      changeFrequency(pitch, oscillatorIndex)
+      dispatch(pitch, oscillatorIndex)
     }
   };
 

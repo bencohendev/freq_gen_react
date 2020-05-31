@@ -9,7 +9,7 @@ import { OscillatorType } from '../../components/OscillatorType'
 
 export const StaticPlayer = (props) => {
 
-  const { dispatch, nodes, changeVolume, muteAll, changePan, frequency, changeFrequency, overtonePreset, playPauseWrapper, playing } = props
+  const { dispatch, nodes, frequency, changeFrequency, overtonePreset, playPauseWrapper, playing } = props
   return (
     <div>
       <div className="oscillator-control-container">
@@ -25,7 +25,7 @@ export const StaticPlayer = (props) => {
          </Grid>
          <Grid item >
          <Button
-          onClick={() => muteAll()}
+          onClick={() => dispatch({type: 'mute'})}
           color="secondary"
           variant="contained"
          >
@@ -71,16 +71,16 @@ export const StaticPlayer = (props) => {
                 min={-100}
                 max={100}
                 value={node.pan * 100}
-                onChange={(e, value) => changePan(e, value, i)}
+                onChange={(e, value) => dispatch({type:'pan', e, value, i})}
               />
             </Grid>
           <Grid container justify="center">
             <Grid item  xs={9}>
-              <FrequencySlider key={`frequency-${i}`} nodes={nodes} i={i} changeFrequency={changeFrequency} />
+              <FrequencySlider key={`frequency-${i}`} nodes={nodes} i={i} dispatch={(e, value, i) => dispatch({type:'frequency-slide', e, value, i})} />
             </Grid>
           </Grid>
           <Grid item  xs={12}>
-            <FrequencySelector key={`selector-${i}`} frequency={frequency} oscillatorIndex={i} changeFrequency={(e, value) => changeFrequency(e, value, i)} />
+            <FrequencySelector key={`selector-${i}`} frequency={frequency} oscillatorIndex={i} dispatch={(value, i) => dispatch({type:'frequency-select', value, i})} />
           </Grid>
           </Grid>
         </Paper>

@@ -3,12 +3,6 @@ import { Slider } from '@material-ui/core'
 
 export const Volume = (props) => {
 
-  const changeVolume = () => {
-    console.log()
-    //let value = e.target.value
-   // dispatch(value, i)
-  }
-
   const {nodes, dispatch, i} = props
   const oscillatorNode = i ? nodes[i] : nodes[0]
   return(
