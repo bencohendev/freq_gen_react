@@ -3,18 +3,18 @@ import { Button } from '@material-ui/core'
 
 export const Play = (props) => {
 
-  const {oscillatorNodes, playPauseWrapper, playing, i} = props
-  const oscillatorNode = oscillatorNodes[i]
+  const {nodes, playPauseWrapper, playing, i} = props
+  const node = nodes[i]
   return (
     <Button
       key={`play-button-${i}`}
       variant="contained"
       color="primary"
       size="large"
-      onClick={() => playPauseWrapper(oscillatorNode, i)}
+      onClick={() => playPauseWrapper(node, i)}
       className="oscillator-control-item"
       >
-      {playing[i] === 'Play'
+      {node.playing === 'Play'
         ? 'Play'
         : 'Pause'}
     </Button>

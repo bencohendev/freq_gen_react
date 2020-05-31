@@ -9,14 +9,14 @@ import { OscillatorType } from '../../components/OscillatorType'
 
 export const StaticPlayer = (props) => {
 
-  const { createNode, deleteOscillator, oscillatorNodes, changeOscillatorType, changeVolume, muteAll, changePan, frequency, changeFrequency, overtonePreset, playPauseWrapper, playing } = props
+  const { dispatch, nodes, changeOscillatorType, changeVolume, muteAll, changePan, frequency, changeFrequency, overtonePreset, playPauseWrapper, playing } = props
   return (
     <div>
       <div className="oscillator-control-container">
       <Grid container justify='flex-start'  spacing={3}>
         <Grid item >
           <Button
-            onClick={() => createNode()}
+            onClick={() => dispatch({type: 'create'})}
             className="green-btn"
             variant="contained"
           >
@@ -45,24 +45,24 @@ export const StaticPlayer = (props) => {
          </Grid>
       </Grid>
       </div>
-      {oscillatorNodes.map((node, i) => (
+      {nodes.map((node, i) => (
         <Paper key={i} elevation={3} className="oscillator-container">
           <Grid container spacing={1} justify="flex-end">
             <Grid item key={`remove-${i}`}>
-                <Button onClick={() => deleteOscillator(i)}>
+                <Button onClick={() => dispatch({type: 'delete', i})}>
                   <HighlightOffIcon></HighlightOffIcon>
                 </Button>
               </Grid>
             </Grid>
           <Grid container spacing={6} justify="center" alignItems="center">
             <Grid item xs={6} md={2} key={`play-${i}`} className="play-container">
-              <Play oscillatorNodes={oscillatorNodes} playPauseWrapper={playPauseWrapper} playing={playing} i={i} />
+              <Play nodes={nodes} playPauseWrapper={playPauseWrapper} playing={playing} i={i} />
             </Grid>
             <Grid item xs={6} md={2} key={`type-${i}`} className="play-container">
-              <OscillatorType oscillatorNodes={oscillatorNodes} changeOscillatorType={(e, value) => changeOscillatorType(e, value, i)} i={i} />
+              <OscillatorType nodes={nodes} dispatch={(value, i)=>dispatch({type: 'oscillator', value, i})} i={i} />
             </Grid>
             <Grid item xs={5} md={3} key={`volume-${i}`}>
-              <Volume oscillatorNodes={oscillatorNodes} changeVolume={changeVolume} i={i} />
+              <Volume nodes={nodes} changeVolume={changeVolume} i={i} />
             </Grid>
             <Grid item xs={5} md={3} key={`pan-${i}`}>
               <div className="field-label">Pan</div>
@@ -76,7 +76,7 @@ export const StaticPlayer = (props) => {
             </Grid>
           <Grid container justify="center">
             <Grid item  xs={9}>
-              <FrequencySlider key={`frequency-${i}`} oscillatorNodes={oscillatorNodes} i={i} changeFrequency={changeFrequency} />
+              <FrequencySlider key={`frequency-${i}`} nodes={nodes} i={i} changeFrequency={changeFrequency} />
             </Grid>
           </Grid>
           <Grid item  xs={12}>

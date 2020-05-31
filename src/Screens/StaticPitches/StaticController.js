@@ -1,8 +1,51 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useReducer} from 'react'
 import Audio from '../../components/Audio'
 import { StaticPlayer } from './StaticPlayer'
 
+
 export const StaticController = () => {
+
+  function reducer(nodes, action) {
+    const oscillatorNodeCopy = [...nodes]
+    const selectedOscillatorNode = oscillatorNodeCopy[action.i]
+    console.log(action.i)
+    switch (action.type) {
+      case 'create':
+        const newNode = createNode()
+        nodes=[...nodes, newNode]
+        return nodes
+      break
+      case 'delete':
+        const deletedNode = oscillatorNodeCopy.splice(action.i, 1)
+        deletedNode[0].onOffNode.gain.setValueAtTime(0, Audio.context.currentTime)        
+        nodes = oscillatorNodeCopy
+        return nodes
+      break
+      case 'play/pause':
+        if(selectedOscillatorNode.onOffNode.gain.value === 0) {  
+          selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, Audio.context.currentTime)
+          selectedOscillatorNode.playing = "Pause"
+        } else if(selectedOscillatorNode.onOffNode.gain.value > 0) {
+          selectedOscillatorNode.onOffNode.gain.setValueAtTime(0, Audio.context.currentTime)
+          selectedOscillatorNode.playing = "Play"
+        }
+        nodes = oscillatorNodeCopy
+        return nodes
+      break
+      case 'oscillator':
+        //const oscillatorType = e.target.value.toLowerCase() 
+        //action.e.persist()
+        const oscillatorType = action.value
+        selectedOscillatorNode.type = oscillatorType
+        nodes = oscillatorNodeCopy
+        return nodes
+      break
+      default:
+        throw new Error();
+      break
+    }
+  }
+
 
   const [oscillatorNodes, setOscillatorNodes] = useState([])
   const [frequency, setFrequency] = useState(440)
@@ -41,13 +84,15 @@ export const StaticController = () => {
       type: oscillatorNode.type,
       gain: 50,
       pan: 0,
+      playing: 'Play',
   }
-    setOscillatorNodes([...oscillatorNodes, oscillatorNodeValues])
-    setPlaying([...playing, 'Play'])
+  return oscillatorNodeValues
   }
 
-  //creates an oscillator on page load
-  useEffect(createNode, [])
+  const [nodes, dispatch] = useReducer(
+    reducer, 
+    [createNode()]
+    )
 
   const suspendContext = () => {
     Audio.context.suspend()
@@ -55,16 +100,6 @@ export const StaticController = () => {
 
   useEffect(suspendContext, [])
 
-  const deleteOscillator = (i) => {
-    const oscillatorNodeCopy = [...oscillatorNodes]
-    const deletedNode = oscillatorNodeCopy.splice(i, 1)
-    if(deletedNode[0].onOffNode.gain.value > 0){
-      actualPlayPause(deletedNode, i)
-    }
-    playing.splice(i, 1)
-    setPlaying(playing)
-    setOscillatorNodes(oscillatorNodeCopy)
-  }
 
 const changeOscillatorType = (e, value, i) => {  
   const oscillatorNodeCopy = [...oscillatorNodes]
@@ -136,34 +171,22 @@ const changeOscillatorType = (e, value, i) => {
   }
 
   const actualPlayPause = (node, i) => {
-    const oscillatorNodeCopy = [...oscillatorNodes]
-    const selectedOscillatorNode = oscillatorNodeCopy[i]
-    if(selectedOscillatorNode.onOffNode.gain.value === 0) {  
-      selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, Audio.context.currentTime)
-      playing[i] = "Pause" 
-      setPlaying(playing)
-      setOscillatorNodes(oscillatorNodeCopy)
-    } else if(selectedOscillatorNode.onOffNode.gain.value > 0) {
-  
-      selectedOscillatorNode.onOffNode.gain.setValueAtTime(0, Audio.context.currentTime)
-      playing[i] = "Play"
-      setPlaying(playing)
-      setOscillatorNodes(oscillatorNodeCopy)
-    }
+    dispatch({type: 'play/pause', i})
   }
 
   return (
     <StaticPlayer 
-    createNode={createNode} 
-    deleteOscillator={deleteOscillator}
-    changeOscillatorType={changeOscillatorType}
-    oscillatorNodes={oscillatorNodes} 
-    changeVolume={changeVolume}
-    muteAll={muteAll}
-    changePan={changePan} 
-    frequency={frequency} 
-    changeFrequency={changeFrequency} 
-    playPauseWrapper={playPauseWrapper} 
-    playing={playing}/>
+      dispatch={dispatch}
+      nodes={nodes}
+      changeOscillatorType={changeOscillatorType}
+      oscillatorNodes={oscillatorNodes} 
+      changeVolume={changeVolume}
+      muteAll={muteAll}
+      changePan={changePan} 
+      frequency={frequency} 
+      changeFrequency={changeFrequency} 
+      playPauseWrapper={playPauseWrapper} 
+      playing={playing}
+    />
   )
 }

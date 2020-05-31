@@ -5,8 +5,8 @@ import '../../App.css'
 
 export const FrequencySlider = (props) => {
 
-  const { oscillatorNodes, i, changeFrequency } = props
-  const oscillator = i ? oscillatorNodes[i] : oscillatorNodes[0]
+  const { oscillatorNodes, i, changeFrequency, nodes } = props
+  const oscillator = i ? nodes[i] : nodes[0]
   const frequency = oscillator.frequency
   return (
     <div>

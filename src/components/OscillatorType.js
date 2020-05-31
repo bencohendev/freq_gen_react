@@ -3,11 +3,18 @@ import { Select } from '@material-ui/core'
 
 export const OscillatorType = (props) => {
 
-    const {changeOscillatorType, i} = props
+    const {dispatch, i} = props
+    const saveSelectEvent = (e, i) => {
+      console.log(i+'type')
+      let value = e.target.value
+      dispatch(value, i)
+    }
+
+
     return (
         <Select
           native
-          onChange={(e, value, i)=>changeOscillatorType(e, value, i)}
+          onChange={(e, i)=>saveSelectEvent(e, i)}
         >
           <option>Sine</option>
           <option>Square</option>
