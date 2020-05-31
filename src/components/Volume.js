@@ -3,7 +3,13 @@ import { Slider } from '@material-ui/core'
 
 export const Volume = (props) => {
 
-  const {nodes, changeVolume, i} = props
+  const changeVolume = () => {
+    console.log()
+    //let value = e.target.value
+   // dispatch(value, i)
+  }
+
+  const {nodes, dispatch, i} = props
   const oscillatorNode = i ? nodes[i] : nodes[0]
   return(
     <div>
@@ -13,7 +19,7 @@ export const Volume = (props) => {
         min={0}
         max={100}
         value={oscillatorNode.gain}
-        onChange={(e, value) => changeVolume(e, value, i)}
+        onChange={(event, value) => dispatch(event, value, i)}
       />
     </div>
   )

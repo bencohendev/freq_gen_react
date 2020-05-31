@@ -4,7 +4,7 @@ import { Select } from '@material-ui/core'
 export const OscillatorType = (props) => {
 
     const {dispatch, i} = props
-    const index = i
+    
     const saveSelectEvent = (e) => {
       let value = e.target.value
       dispatch(value, i)

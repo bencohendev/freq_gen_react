@@ -9,7 +9,7 @@ import { OscillatorType } from '../../components/OscillatorType'
 
 export const StaticPlayer = (props) => {
 
-  const { dispatch, nodes, changeOscillatorType, changeVolume, muteAll, changePan, frequency, changeFrequency, overtonePreset, playPauseWrapper, playing } = props
+  const { dispatch, nodes, changeVolume, muteAll, changePan, frequency, changeFrequency, overtonePreset, playPauseWrapper, playing } = props
   return (
     <div>
       <div className="oscillator-control-container">
@@ -62,7 +62,7 @@ export const StaticPlayer = (props) => {
               <OscillatorType nodes={nodes} dispatch={(value, i)=>dispatch({type: 'oscillator', value, i})} i={i} />
             </Grid>
             <Grid item xs={5} md={3} key={`volume-${i}`}>
-              <Volume nodes={nodes} changeVolume={changeVolume} i={i} />
+              <Volume nodes={nodes} dispatch={(event, value, i) => dispatch({type:'volume', event, value, i})} i={i} />
             </Grid>
             <Grid item xs={5} md={3} key={`pan-${i}`}>
               <div className="field-label">Pan</div>

@@ -31,10 +31,15 @@ export const StaticController = () => {
         nodes = oscillatorNodeCopy
         return nodes
       break
+      case 'volume':    
+        selectedOscillatorNode.oscillatorGainNode.gain.setValueAtTime(action.value/100, Audio.context.currentTime)
+        selectedOscillatorNode.gain = action.value
+        nodes = oscillatorNodeCopy
+        return nodes
+      break
       case 'oscillator':
         const oscillatorType = action.value.toLowerCase()
         selectedOscillatorNode.oscillatorNode.type = oscillatorType
-        console.log(selectedOscillatorNode.oscillatorNode)
         nodes = oscillatorNodeCopy
         return nodes
       break
@@ -97,15 +102,6 @@ export const StaticController = () => {
   }
 
   useEffect(suspendContext, [])
-
-
-const changeOscillatorType = (e, value, i) => {  
-  const oscillatorNodeCopy = [...oscillatorNodes]
-  const selectedOscillatorNode = oscillatorNodeCopy[i]
-  const oscillatorType = e.target.value.toLowerCase()
-  selectedOscillatorNode.oscillatorNode.type = oscillatorType
-  setOscillatorNodes(oscillatorNodeCopy)  
-}
 
   //change volume of individual oscillators
   const changeVolume = (e, value, i) => {
@@ -176,7 +172,6 @@ const changeOscillatorType = (e, value, i) => {
     <StaticPlayer 
       dispatch={dispatch}
       nodes={nodes}
-      changeOscillatorType={changeOscillatorType}
       oscillatorNodes={oscillatorNodes} 
       changeVolume={changeVolume}
       muteAll={muteAll}
