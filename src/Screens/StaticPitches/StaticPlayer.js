@@ -9,7 +9,8 @@ import { OscillatorType } from '../../components/OscillatorType'
 
 export const StaticPlayer = (props) => {
 
-  const { dispatch, nodes, overtonePreset, playPauseWrapper } = props
+  const { dispatch, nodes, overtonePreset, playPauseWrapper, pitchArray, fundamentalSetter } = props
+
   return (
     <div>
       <div className="oscillator-control-container">
@@ -34,6 +35,15 @@ export const StaticPlayer = (props) => {
          </Grid>
          <Grid item>
          <div className="field-label">Choose An Overtone Preset</div>
+         <Select 
+          native
+          onChange={(e)=>{fundamentalSetter(e)}}
+         >
+          <option>Select a Fundamental</option>
+          {pitchArray.map((pitchObj, i) => (
+            <option key={i} value={pitchObj.frequency}>{pitchObj.pitch}</option>
+          ))}
+         </Select>
           <Select
             native
             onChange={(e)=>overtonePreset(e)}
