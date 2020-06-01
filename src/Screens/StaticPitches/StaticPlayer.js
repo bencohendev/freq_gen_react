@@ -34,14 +34,14 @@ export const StaticPlayer = (props) => {
          </Grid>
          <Grid item>
          <div className="field-label">Choose An Overtone Preset</div>
-           <Select
+          <Select
             native
             onChange={(e)=>overtonePreset(e)}
-           >
-             <option>Select a Preset</option>
+          >
+            <option>Select a Preset</option>
             <option>1 - 3 - 5</option>
             <option>1 - 3 - 5 - 8</option>
-           </Select>
+          </Select>
          </Grid>
       </Grid>
       </div>

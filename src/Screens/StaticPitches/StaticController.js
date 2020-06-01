@@ -7,9 +7,11 @@ import { StaticPlayer } from './StaticPlayer'
 function reducer(nodes, action) {
   const oscillatorNodeCopy = [...nodes]
   const selectedOscillatorNode = oscillatorNodeCopy[action.i]
+  let frequency = null
   switch (action.type) {
     case 'create':
-      const newNode = createNode()
+      action.freq ? frequency = action.freq : frequency = 440
+      const newNode = createNode(frequency)
       nodes=[...nodes, newNode]
       return nodes
     break
@@ -68,6 +70,18 @@ function reducer(nodes, action) {
       nodes = oscillatorNodeCopy
       return nodes
     break
+    case 'preset':
+      const selectedPreset = action.e.target.value
+      switch (selectedPreset) {
+        case '1 - 3 - 5':
+          for (let i = 0; i<2; i++) {
+            createNode()
+          }
+        break
+      }
+      nodes = oscillatorNodeCopy
+      return nodes
+    break
     default:
       throw new Error();
     break
@@ -75,7 +89,7 @@ function reducer(nodes, action) {
 }
 
 //creates a new oscillator node
-const createNode = () => {
+const createNode = (freq) => {
 
   const oscillatorNode = Audio.context.createOscillator();
   //create nodes. oscillatorGainNode used for volume control. onOffNode used for playing and pausing. Pan Node for panning
@@ -103,7 +117,7 @@ const createNode = () => {
     onOffNode: onOffNode,
     oscillatorGainNode: oscillatorGainNode,
     oscillatorPanNode: panNode,
-    frequency: oscillatorNode.frequency.value,
+    frequency: freq,
     type: oscillatorNode.type,
     gain: 50,
     pan: 0,
@@ -117,7 +131,7 @@ export const StaticController = () => {
 
   const [nodes, dispatch] = useReducer(
     reducer, 
-    [createNode()]
+    [createNode(440)]
     )
 
   const suspendContext = () => {
@@ -126,6 +140,19 @@ export const StaticController = () => {
 
   useEffect(suspendContext, [])
 
+  const overtonePreset = (e) => {
+    const selectedPreset = e.target.value
+
+    switch (selectedPreset) {
+      case '1 - 3 - 5':
+        const freqArray = [207.652, 622.256, 1046.496]
+        freqArray.map((freq) => {
+          dispatch({type: 'create', freq})
+        })
+        
+      break
+    }
+  }
 
   //play or pause by turning onOffNode to 1 or 0 respectively
   const playPauseWrapper = (node, i) => {
@@ -147,6 +174,7 @@ export const StaticController = () => {
     <StaticPlayer 
       dispatch={dispatch}
       nodes={nodes}
+      overtonePreset={overtonePreset}
       playPauseWrapper={playPauseWrapper} 
     />
   )
