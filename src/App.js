@@ -109,7 +109,7 @@ return oscillatorNodeValues
             <Grid item xs={11} lg={10}>
               <Switch>
               <Route path="/series">
-                  <SeriesController context={context}/>
+                  <SeriesController context={context} pitchArray={pitchArray} createNode={createNode}/>
                 </Route>
                 <Route path="/">
                   <StaticController context={context} pitchArray={pitchArray} createNode={createNode}/>

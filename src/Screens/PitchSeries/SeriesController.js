@@ -1,12 +1,12 @@
-import React, {useState, useEffect} from 'react'
-import Audio from '../../components/Audio'
+import React, {useState, useEffect, useReducer} from 'react'
 import { SeriesPlayer } from './SeriesPlayer'
 
-export const SeriesController = () => {
+export const SeriesController = (props) => {
+
+  const {createNode, context, pitchArray} = props
 
   const [oscillatorNodes, setOscillatorNodes] = useState([])
   const [playing, setPlaying] = useState([])
-  const [pitchArray, setPitchArray] = useState([])
   const [frequency, setFrequency] = useState(440)
   const [minFrequency, setMinFrequency] = useState(27.5)
   const [maxFrequency, setMaxFrequency] = useState(7902.133)
@@ -17,95 +17,67 @@ export const SeriesController = () => {
   const [isPlaying, setIsPlaying] = useState(false)
 
 
-
-
-  //creates a new oscillator node
-  const createNode = () => {
-
-    const oscillatorNode = Audio.context.createOscillator();
-    //create nodes. oscillatorGainNode used for volume control. onOffNode used for playing and pausing. Pan Node for panning
-    const oscillatorGainNode = Audio.context.createGain()
-    const seriesGainNode = Audio.context.createGain()
-    const onOffNode = Audio.context.createGain()
-    const panNode = Audio.context.createPanner()
-
-    //initialize node values
-    oscillatorGainNode.gain.setValueAtTime(.5, Audio.context.currentTime)
-    seriesGainNode.gain.setValueAtTime(0, Audio.context.currentTime)
-    onOffNode.gain.setValueAtTime(0, Audio.context.currentTime)      
-    panNode.panningModel = 'equalpower'
-    panNode.setPosition(0, 0, 0)
-
-    //connect node chain
-    oscillatorNode.connect(oscillatorGainNode)
-    oscillatorGainNode.connect(seriesGainNode)
-    seriesGainNode.connect(onOffNode)   
-    onOffNode.connect(panNode)
-    panNode.connect(Audio.context.destination)
-
-    oscillatorNode.start()
-
-    //saves oscillator values as object that can be manipulated later
-    const oscillatorNodeValues = {
-      oscillatorNode: oscillatorNode,
-      onOffNode: onOffNode,
-      oscillatorGainNode: oscillatorGainNode,
-      seriesGainNode: seriesGainNode,
-      oscillatorPanNode: panNode,
-      frequency: oscillatorNode.frequency.value,
-      type: oscillatorNode.type,
-      gain: 50,
-      pan: 0      
-  }
-    setOscillatorNodes([...oscillatorNodes, oscillatorNodeValues])
-    setPlaying(['Play'])
-  }
-
-  //creates an oscillator on page load
-  useEffect(createNode, [])
-
   const suspendContext = () => {
-    Audio.context.suspend()
+    context.suspend()
   }
 
   useEffect(suspendContext, [])
 
-  const populateAllPitches = () => {
-    let fundamentalPitches = [32.703, 34.648, 36.708, 38.891, 41.203, 43.454, 46.249, 48.999, 51.913, 55, 58.270, 61.735]
-    const pitchNames = ['c' , 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b']
-    let allPitches = []
-    let pitchMultiplier = 1
+  const [nodes, dispatch] = useReducer(
+    reducer, 
+    [createNode(440)]
+    )
 
-    for(let i=1; i<=9; i++) {
-        for(let j=0; j<=fundamentalPitches.length-1; j++){         
-            allPitches.push({pitch: pitchNames[j]+i, frequency: fundamentalPitches[j]*pitchMultiplier})
-        }
-        pitchMultiplier = pitchMultiplier*2
-    }
-    setPitchArray(allPitches)
-    setSelectedFreqArray(allPitches)
+
+//reducer function handles all basic functions of oscillator nodes
+function reducer(nodes, action) {
+  const oscillatorNodeCopy = [...nodes]
+  const selectedOscillatorNode = oscillatorNodeCopy[action.i]
+  let freqVal = null
+  let panVal = null  
+  let playVal = null
+
+  switch (action.type) {
+    case 'create':
+      action.freq ? freqVal = action.freq : freqVal = 440
+      action.pan ? panVal = action.pan : panVal = 0
+      action.play ? playVal = action.play : playVal = "Play"
+      const newNode = createNode(freqVal, panVal, playVal)
+      nodes=[...nodes, newNode]
+      return nodes
+    
+    case 'clear':
+      nodes=[]
+      return nodes
+    
+    case 'play/pause':
+      if(selectedOscillatorNode.onOffNode.gain.value === 0) { 
+        selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, context.currentTime)   
+        selectedOscillatorNode.playing = "Pause"
+      } else if(selectedOscillatorNode.onOffNode.gain.value > 0) {
+        selectedOscillatorNode.onOffNode.gain.setValueAtTime(0, context.currentTime)   
+        selectedOscillatorNode.playing = "Play"
+      }
+      nodes = oscillatorNodeCopy
+      return nodes
+    
+    case 'volume':    
+      selectedOscillatorNode.oscillatorGainNode.gain.setValueAtTime(action.value/100, context.currentTime)
+      selectedOscillatorNode.gain = action.value
+      nodes = oscillatorNodeCopy
+      return nodes
+
+    case 'oscillator':
+      const oscillatorType = action.value.toLowerCase()
+      selectedOscillatorNode.oscillatorNode.type = oscillatorType
+      nodes = oscillatorNodeCopy
+      return nodes
+    
+    default:
+      throw new Error();
+    break
+  }
 }
-
-useEffect(populateAllPitches, [])
-
-    //change volume of individual oscillators
-const changeVolume = (e, value, i) => {
-  const oscillatorNodeCopy = [...oscillatorNodes]
-  const selectedOscillatorNode = oscillatorNodeCopy[i]
-  selectedOscillatorNode.oscillatorGainNode.gain.setValueAtTime(value/100, Audio.context.currentTime)
-  selectedOscillatorNode.gain = value
-  setOscillatorNodes(oscillatorNodeCopy)
-}
-
-const changeOscillatorType = (e) => {  
-  const oscillatorNodeCopy = [...oscillatorNodes]
-  const selectedOscillatorNode = oscillatorNodeCopy[0]
-  const oscillatorType = e.target.value.toLowerCase()
-  selectedOscillatorNode.oscillatorNode.type = oscillatorType
-  setOscillatorNodes(oscillatorNodeCopy)  
-}
-
-
 
 const changeMinFrequency = (e) => {
   if(typeof e === 'object') {
@@ -171,7 +143,7 @@ setSelectedFreqArray(filteredPitchArray)
      }
   }
   const changeFrequency = (e, value, i) => {
-    const oscillatorNodeCopy = [...oscillatorNodes]
+    const oscillatorNodeCopy = [...nodes]
     const selectedOscillatorNode = oscillatorNodeCopy[0]
     let newFreq = null
     if(typeof e === 'object') {
@@ -186,31 +158,30 @@ setSelectedFreqArray(filteredPitchArray)
     }
 
     setFrequency(newFreq)
-    selectedOscillatorNode.oscillatorNode.frequency.setValueAtTime(newFreq, Audio.context.currentTime)
+    selectedOscillatorNode.oscillatorNode.frequency.setValueAtTime(newFreq, context.currentTime)
     setOscillatorNodes(oscillatorNodeCopy)    
   }
 
 //this effect starts and stops the tone generator
 useEffect(() => {
   let intervalID = null
-  const oscillatorNodeCopy = [...oscillatorNodes]
+  const oscillatorNodeCopy = [...nodes]
   const selectedOscillatorNode = oscillatorNodeCopy[0]
-
   if( (isPlaying) ) {
       if(infinitePitchSets){
         let i=0
           intervalID = setInterval(() => {
               i++
               if(i===parseInt(numberOfPitches)+1) {
-                selectedOscillatorNode.seriesGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
+                selectedOscillatorNode.seriesGainNode.gain.setTargetAtTime(0, context.currentTime, 0.001)
                 i=0
               } else {
                   const pitchToPlay = selectedFreqArray[Math.floor(Math.random() * selectedFreqArray.length)]
                   changeFrequency(pitchToPlay.frequency)
-                  selectedOscillatorNode.seriesGainNode.gain.setTargetAtTime(1, Audio.context.currentTime, 0.001)
+                  selectedOscillatorNode.seriesGainNode.gain.setTargetAtTime(1, context.currentTime, 0.001)
               }
               setTimeout(() => {
-                selectedOscillatorNode.seriesGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
+                selectedOscillatorNode.seriesGainNode.gain.setTargetAtTime(0, context.currentTime, 0.001)
               }, (bpm - (bpm/4)));
 
           }, (bpm));
@@ -223,10 +194,10 @@ useEffect(() => {
               setTimeout(() => {
                   const pitchToPlay = selectedFreqArray[Math.floor(Math.random() * selectedFreqArray.length)]
                       changeFrequency(pitchToPlay.frequency)
-                      selectedOscillatorNode.seriesGainNode.gain.setTargetAtTime(1, Audio.context.currentTime, 0.001)
+                      selectedOscillatorNode.seriesGainNode.gain.setTargetAtTime(1, context.currentTime, 0.001)
                   
                   setTimeout(() => {
-                    selectedOscillatorNode.seriesGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
+                    selectedOscillatorNode.seriesGainNode.gain.setTargetAtTime(0, context.currentTime, 0.001)
                       }, (bpm - (bpm/4)));
 
                   }, (bpm*i));
@@ -235,8 +206,8 @@ useEffect(() => {
               setTimeout(() => {
                   setPlaying(['Play'])
                   setIsPlaying(false)
-                  selectedOscillatorNode.seriesGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
-                  selectedOscillatorNode.onOffNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
+                  selectedOscillatorNode.seriesGainNode.gain.setTargetAtTime(0, context.currentTime, 0.001)
+                  selectedOscillatorNode.onOffNode.gain.setTargetAtTime(0, context.currentTime, 0.001)
                   return
                   }, (bpm*i));
               }    
@@ -250,50 +221,36 @@ useEffect(() => {
 
   if( !isPlaying ) {
       window.clearInterval(intervalID)
-      Audio.masterGainNode.gain.setTargetAtTime(0, Audio.context.currentTime, 0.001)
+      selectedOscillatorNode.onOffNode.gain.setTargetAtTime(0, context.currentTime, 0.001)
   } 
 
 }, [isPlaying, selectedFreqArray, bpm, numberOfPitches, setIsPlaying, infinitePitchSets])
 
-//play or pause by turning onOffNode to 1 or 0 respectively
-  const playPauseWrapper = () => {
-    if(Audio.context.state === 'suspended') {
-    Audio.context.resume()
-    .then(() => {      
-      actualPlayPause()      
+  //play or pause by turning onOffNode to 1 or 0 respectively
+  const playPauseWrapper = (node, i) => {
+    if(node.oscillatorNode.context.state === 'suspended') {
+      
+      node.oscillatorNode.context.resume()
+      .then(() => {
+        
+        actualPlayPause(i)
     })
     } else {
-      actualPlayPause()
-      
+      actualPlayPause(i)
     }
   }
 
-  const actualPlayPause = () => {
-    const oscillatorNodeCopy = [...oscillatorNodes]
-    const selectedOscillatorNode = oscillatorNodeCopy[0]
-    if(selectedOscillatorNode.onOffNode.gain.value === 0) {  
-      selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, Audio.context.currentTime)  
-      setOscillatorNodes(oscillatorNodeCopy)
-      setPlaying(['Pause'])
-      setIsPlaying(true)
-
-  
-    } else if(selectedOscillatorNode.onOffNode.gain.value > 0) {
-  
-      selectedOscillatorNode.onOffNode.gain.setValueAtTime(0, Audio.context.currentTime)
-       setOscillatorNodes(oscillatorNodeCopy)
-       setPlaying(["Play"])
-       setIsPlaying(false)
-
-    }
+  const actualPlayPause = (i) => {
+    dispatch({type: 'play/pause', i})
   }
 
   return(
     <SeriesPlayer 
       oscillatorNodes={oscillatorNodes} 
+      nodes={nodes}
+      dispatch={dispatch}
       playPauseWrapper={playPauseWrapper} 
       playing={playing} 
-      changeVolume={changeVolume}
       instrumentSelector={instrumentSelector}
       minFrequency={minFrequency}
       maxFrequency={maxFrequency}
@@ -303,7 +260,6 @@ useEffect(() => {
       changeNumberOfPitches={changeNumberOfPitches} 
       changeBpm={changeBpm} 
       changeInfinitePitchSets={changeInfinitePitchSets} 
-      changeOscillatorType={changeOscillatorType}
     />
   )
 }
