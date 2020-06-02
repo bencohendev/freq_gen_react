@@ -3,7 +3,7 @@ import { Button } from '@material-ui/core'
 
 export const Play = (props) => {
 
-  const {nodes, playPauseWrapper, playing, i} = props
+  const {nodes, playPauseWrapper, i} = props
   const node = nodes[i]
   return (
     <Button

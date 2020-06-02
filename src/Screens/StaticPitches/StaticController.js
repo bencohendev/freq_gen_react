@@ -8,7 +8,7 @@ export const StaticController = (props) => {
 
   
   const [fundamental, setFundamental] = useState(207.652)
-  
+
   const [nodes, dispatch] = useReducer(
     reducer, 
     [createNode(440)]
@@ -19,37 +19,46 @@ export const StaticController = (props) => {
 function reducer(nodes, action) {
   const oscillatorNodeCopy = [...nodes]
   const selectedOscillatorNode = oscillatorNodeCopy[action.i]
-  let frequency = null
+  let freqVal = null
+  let panVal = null  
+  let playVal = null
+
   switch (action.type) {
     case 'create':
-      action.freq ? frequency = action.freq : frequency = 440
-      const newNode = createNode(frequency)
+      action.freq ? freqVal = action.freq : freqVal = 440
+      action.pan ? panVal = action.pan : panVal = 0
+      action.play ? playVal = action.play : playVal = "Play"
+      const newNode = createNode(freqVal, panVal, playVal)
       nodes=[...nodes, newNode]
       return nodes
-    break
+    
     case 'delete':
       const deletedNode = oscillatorNodeCopy.splice(action.i, 1)
       deletedNode[0].onOffNode.gain.setValueAtTime(0, context.currentTime)        
       nodes = oscillatorNodeCopy
       return nodes
-    break
+    
+    case 'clear':
+      nodes=[]
+      return nodes
+    
     case 'play/pause':
-      if(selectedOscillatorNode.onOffNode.gain.value === 0) {  
-        selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, context.currentTime)
+      if(selectedOscillatorNode.onOffNode.gain.value === 0) { 
+        selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, context.currentTime)   
         selectedOscillatorNode.playing = "Pause"
       } else if(selectedOscillatorNode.onOffNode.gain.value > 0) {
-        selectedOscillatorNode.onOffNode.gain.setValueAtTime(0, context.currentTime)
+        selectedOscillatorNode.onOffNode.gain.setValueAtTime(0, context.currentTime)   
         selectedOscillatorNode.playing = "Play"
       }
       nodes = oscillatorNodeCopy
       return nodes
-    break
+    
     case 'volume':    
       selectedOscillatorNode.oscillatorGainNode.gain.setValueAtTime(action.value/100, context.currentTime)
       selectedOscillatorNode.gain = action.value
       nodes = oscillatorNodeCopy
       return nodes
-    break
+    
     case 'mute':
       oscillatorNodeCopy.map((node) => {
         node.onOffNode.gain.setValueAtTime(0, context.currentTime)
@@ -62,26 +71,26 @@ function reducer(nodes, action) {
       selectedOscillatorNode.oscillatorNode.type = oscillatorType
       nodes = oscillatorNodeCopy
       return nodes
-    break
+    
     case 'pan':
       selectedOscillatorNode.oscillatorPanNode.setPosition(action.value/100, 0 ,0)
       selectedOscillatorNode.pan = action.value / 100
       nodes = oscillatorNodeCopy
       return nodes
-    break
+    
     case 'frequency-slide':
       selectedOscillatorNode.oscillatorNode.frequency.setValueAtTime(2**action.value, context.currentTime)
       selectedOscillatorNode.frequency = 2**action.value
       nodes = oscillatorNodeCopy
       return nodes
-    break
+    
 
     case 'frequency-select':
       selectedOscillatorNode.oscillatorNode.frequency.setValueAtTime(action.value, context.currentTime)
       selectedOscillatorNode.frequency = action.value
       nodes = oscillatorNodeCopy
       return nodes
-    break
+    
     case 'preset':
       const selectedPreset = action.e.target.value
       switch (selectedPreset) {
@@ -93,7 +102,7 @@ function reducer(nodes, action) {
       }
       nodes = oscillatorNodeCopy
       return nodes
-    break
+    
     default:
       throw new Error();
     break
@@ -106,6 +115,7 @@ function reducer(nodes, action) {
 
   useEffect(suspendContext, [])
 
+
   const fundamentalSetter = (e) => {
     setFundamental(e.target.value)
   }
@@ -117,6 +127,7 @@ function reducer(nodes, action) {
 
     switch (selectedPreset) {
       case '1 - 3 - 5':
+        dispatch({type: 'clear'})
         freqMultiplier = [1, 3, 5]
         freqArray = freqMultiplier.map((multiplier) => {
           return multiplier * fundamental
@@ -139,17 +150,20 @@ function reducer(nodes, action) {
 
   //play or pause by turning onOffNode to 1 or 0 respectively
   const playPauseWrapper = (node, i) => {
-    if(context.state === 'suspended') {
-      context.resume()
+    console.log(node.oscillatorNode.context.state)
+    if(node.oscillatorNode.context.state === 'suspended') {
+      
+      node.oscillatorNode.context.resume()
       .then(() => {
-        actualPlayPause(node, i)
+        
+        actualPlayPause(i)
     })
     } else {
-      actualPlayPause(node, i)
+      actualPlayPause(i)
     }
   }
 
-  const actualPlayPause = (node, i) => {
+  const actualPlayPause = (i) => {
     dispatch({type: 'play/pause', i})
   }
 

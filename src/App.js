@@ -5,9 +5,6 @@ import { StaticController } from './Screens/StaticPitches/StaticController'
 import { SeriesController } from './Screens/PitchSeries/SeriesController'
 import { Grid } from '@material-ui/core'
 
-import { AudioContext } from './contexts/AudioContext'
-
-
 const activeStyle = {
   color: 'red'
 } 
@@ -15,8 +12,7 @@ const activeStyle = {
 function App() {
 
   const context = new (window.AudioContext || window.webkitAudioContext)()
-  const masterGainNode = context.createGain()
-  const suspendContext = context.suspend()
+
   const [pitchArray, setPitchArray] = useState([])
 
   const populateAllPitches = () => {
