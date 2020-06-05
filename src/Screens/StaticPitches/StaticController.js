@@ -1,17 +1,60 @@
 import React, {useState, useEffect, useReducer} from 'react'
 import { StaticPlayer } from './StaticPlayer'
+import {CreateNode} from './CreateNode'
 
 
 export const StaticController = (props) => {
 
-  const {context, pitchArray, createNode} = props
+  const {context, pitchArray} = props
 
   
   const [fundamental, setFundamental] = useState(207.652)
 
+  const createNode = (freq, series) => { 
+    
+    const oscillatorNode = context.createOscillator();
+    //create nodes. oscillatorGainNode used for volume control. onOffNode used for playing and pausing. Pan Node for panning
+    const oscillatorGainNode = context.createGain()
+    const onOffNode = context.createGain()
+    const panNode = context.createPanner()
+  
+    //initialize node values
+    oscillatorGainNode.gain.setValueAtTime(.5, context.currentTime)
+    onOffNode.gain.setValueAtTime(0, context.currentTime)      
+    panNode.panningModel = 'equalpower'
+    panNode.setPosition(0, 0, 0)
+  
+    //connect node chain
+    oscillatorNode.connect(oscillatorGainNode)
+    oscillatorGainNode.connect(onOffNode)
+    onOffNode.connect(panNode)
+    panNode.connect(context.destination)
+  
+  
+    oscillatorNode.start()
+  
+    oscillatorNode.frequency.setValueAtTime(freq, context.currentTime)
+  
+  
+    //saves oscillator values as object that can be manipulated later
+    const oscillatorNodeValues = {
+      oscillatorNode: oscillatorNode,
+      oscillatorGainNode: oscillatorGainNode,
+      onOffNode: onOffNode,
+      oscillatorPanNode: panNode,
+      frequency: freq,
+      type: oscillatorNode.type,
+      gain: 50,
+      pan: 0,
+      playing: 'Play',
+  }
+  return oscillatorNodeValues
+  }
+
+
   const [nodes, dispatch] = useReducer(
     reducer, 
-    [createNode(440)]
+    [createNode(440, 1)]
     )
 
 
@@ -43,6 +86,7 @@ function reducer(nodes, action) {
       return nodes
     
     case 'play/pause':
+      console.log(selectedOscillatorNode)
       if(selectedOscillatorNode.onOffNode.gain.value === 0) { 
         selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, context.currentTime)   
         selectedOscillatorNode.playing = "Pause"
@@ -137,6 +181,7 @@ function reducer(nodes, action) {
         })        
       break
       case '1 - 3 - 5 - 8':
+        dispatch({type: 'clear'})
         freqMultiplier = [1, 3, 5, 7.1]
         freqArray = freqMultiplier.map((multiplier) => {
           return multiplier * fundamental

@@ -33,46 +33,7 @@ function App() {
   useEffect(populateAllPitches, [])
 
 
-//creates a new oscillator node
-const createNode = (freq) => {
 
-  const oscillatorNode = context.createOscillator();
-  //create nodes. oscillatorGainNode used for volume control. onOffNode used for playing and pausing. Pan Node for panning
-  const oscillatorGainNode = context.createGain()
-  const onOffNode = context.createGain()
-  const panNode = context.createPanner()
-
-  //initialize node values
-  oscillatorGainNode.gain.setValueAtTime(.5, context.currentTime)
-  onOffNode.gain.setValueAtTime(0, context.currentTime)      
-  panNode.panningModel = 'equalpower'
-  panNode.setPosition(0, 0, 0)
-
-  //connect node chain
-  oscillatorNode.connect(oscillatorGainNode)
-  oscillatorGainNode.connect(onOffNode)   
-  onOffNode.connect(panNode)
-  panNode.connect(context.destination)
-
-  oscillatorNode.start()
-
-  oscillatorNode.frequency.setValueAtTime(freq, context.currentTime)
-
-
-  //saves oscillator values as object that can be manipulated later
-  const oscillatorNodeValues = {
-    oscillatorNode: oscillatorNode,
-    onOffNode: onOffNode,
-    oscillatorGainNode: oscillatorGainNode,
-    oscillatorPanNode: panNode,
-    frequency: freq,
-    type: oscillatorNode.type,
-    gain: 50,
-    pan: 0,
-    playing: 'Play',
-}
-return oscillatorNodeValues
-}
 
   return (
     <Router forceRefresh={true}>
@@ -109,10 +70,10 @@ return oscillatorNodeValues
             <Grid item xs={11} lg={10}>
               <Switch>
               <Route path="/series">
-                  <SeriesController context={context} pitchArray={pitchArray} createNode={createNode}/>
+                  <SeriesController context={context} pitchArray={pitchArray} />
                 </Route>
                 <Route path="/">
-                  <StaticController context={context} pitchArray={pitchArray} createNode={createNode}/>
+                  <StaticController context={context} pitchArray={pitchArray} />
                 </Route>
               </Switch>
             </Grid>

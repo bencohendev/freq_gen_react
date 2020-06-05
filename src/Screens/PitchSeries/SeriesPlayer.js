@@ -1,17 +1,18 @@
 import React from 'react'
 import { Grid, Paper, Typography, Select, Input, Checkbox } from '@material-ui/core';
-import { Volume } from '../../components/Volume'
-import { Play } from '../../components/Play'
-import { OscillatorType } from '../../components/OscillatorType'
+import { Volume } from './components/Volume'
+import { Play } from './components/Play'
+import { OscillatorType } from './components/OscillatorType'
 
 
 
 export const SeriesPlayer = (props) => {
 
-  const { nodes, dispatch, playPauseWrapper, playing, instrumentSelector, minFrequency, maxFrequency, changeMinFrequency, changeMaxFrequency, pitchArray, changeNumberOfPitches, changeBpm, changeInfinitePitchSets } = props
+  const { oscillatorNodes, playPauseWrapper, playing, changeVolume, instrumentSelector, minFrequency, maxFrequency, changeMinFrequency, changeMaxFrequency, pitchArray, changeNumberOfPitches, changeBpm, changeInfinitePitchSets, changeOscillatorType } = props
+  const oscillatorNode = oscillatorNodes[0] ? oscillatorNodes[0] : null
 
   return (
-    nodes
+    oscillatorNode
       ?
       <Paper elevation={3} className="oscillator-container">
         <Grid container spacing={6} justify='center'>
@@ -115,17 +116,17 @@ export const SeriesPlayer = (props) => {
         </Grid>
         <Grid container spacing={6} justify="center">
           <Grid item xs={6}>
-          <OscillatorType nodes={nodes} dispatch={(value, i)=>dispatch({type: 'oscillator', value, i})} i={0} />
+            <OscillatorType oscillatorNodes={oscillatorNodes} changeOscillatorType={changeOscillatorType} i={0}/>
           </Grid>
         </Grid>
         <Grid container spacing={6} justify="center">
           <Grid item xs={6}>
-          <Volume nodes={nodes} dispatch={(event, value, i) => dispatch({type:'volume', event, value, i})} i={0} />
+            <Volume oscillatorNodes={oscillatorNodes} changeVolume={changeVolume} i={0} />
           </Grid>
         </Grid>
         <Grid container spacing={6} justify="center">
           <Grid item xs={6}>
-          <Play nodes={nodes} playPauseWrapper={playPauseWrapper} i={0} />
+        <Play oscillatorNodes={oscillatorNodes} playPauseWrapper={playPauseWrapper} playing={playing} i={0} />
         </Grid>
         </Grid>
       </Paper>
