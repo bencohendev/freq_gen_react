@@ -1,7 +1,5 @@
 import React, {useState, useEffect, useReducer} from 'react'
 import { StaticPlayer } from './StaticPlayer'
-import {CreateNode} from './CreateNode'
-
 
 export const StaticController = (props) => {
 
@@ -86,7 +84,6 @@ function reducer(nodes, action) {
       return nodes
     
     case 'play/pause':
-      console.log(selectedOscillatorNode)
       if(selectedOscillatorNode.onOffNode.gain.value === 0) { 
         selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, context.currentTime)   
         selectedOscillatorNode.playing = "Pause"
@@ -195,7 +192,6 @@ function reducer(nodes, action) {
 
   //play or pause by turning onOffNode to 1 or 0 respectively
   const playPauseWrapper = (node, i) => {
-    console.log(node.oscillatorNode.context.state)
     if(node.oscillatorNode.context.state === 'suspended') {
       
       node.oscillatorNode.context.resume()

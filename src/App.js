@@ -32,9 +32,6 @@ function App() {
 
   useEffect(populateAllPitches, [])
 
-
-
-
   return (
     <Router forceRefresh={true}>
       <div className="App">

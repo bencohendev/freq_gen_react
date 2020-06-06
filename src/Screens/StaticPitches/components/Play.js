@@ -9,7 +9,9 @@ export const Play = (props) => {
     <Button
       key={`play-button-${i}`}
       variant="contained"
-      color="primary"
+      color={node.playing === 'Play'
+      ? 'primary'
+      : 'secondary'}
       size="large"
       onClick={() => playPauseWrapper(node, i)}
       className="oscillator-control-item"

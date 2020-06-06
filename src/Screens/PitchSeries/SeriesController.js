@@ -1,6 +1,6 @@
 
 import React, {useState, useEffect} from 'react'
-import Audio from '../StaticPitches/components/Audio'
+import Audio from './components/Audio'
 import { SeriesPlayer } from './SeriesPlayer'
 
 export const SeriesController = () => {
