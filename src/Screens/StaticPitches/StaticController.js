@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useReducer} from 'react'
 import { StaticPlayer } from './StaticPlayer'
-import {CreateNode} from './CreateNode'
 
 
 export const StaticController = (props) => {

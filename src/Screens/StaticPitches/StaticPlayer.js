@@ -1,8 +1,8 @@
 import React from 'react'
 import { Grid, Paper, Button, Slider, Select } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { FrequencySelector } from './FrequencySelector'
-import { FrequencySlider } from './FrequencySlider'
+import { FrequencySelector } from './components/FrequencySelector'
+import { FrequencySlider } from './components/FrequencySlider'
 import { Volume } from './components/Volume'
 import { Play } from './components/Play'
 import { OscillatorType } from './components/OscillatorType'
