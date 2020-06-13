@@ -26,18 +26,28 @@ export const StaticPlayer = (props) => {
          </Grid>
          <Grid item >
          <Button
+          onClick={() => dispatch({type: 'play-all'})}
+          color="primary"
+          variant="contained"
+         >
+           Play All
+         </Button>
+         </Grid>
+         <Grid item >
+         <Button
           onClick={() => dispatch({type: 'mute'})}
           color="secondary"
           variant="contained"
          >
            Mute All
          </Button>
-         </Grid>
+         </Grid>         
          <Grid item>
          <div className="field-label">Choose An Overtone Preset</div>
          <Select 
           native
           onChange={(e)=>{fundamentalSetter(e)}}
+          className="preset-select"
          >
           <option>Select a Fundamental</option>
           {pitchArray.map((pitchObj, i) => (

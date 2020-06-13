@@ -17,9 +17,6 @@ export const SeriesController = () => {
   const [infinitePitchSets, setInfinitePitchSets] = useState(true)
   const [isPlaying, setIsPlaying] = useState(false)
 
-
-
-
   //creates a new oscillator node
   const createNode = () => {
 

@@ -9,7 +9,7 @@ export const StaticController = (props) => {
   
   const [fundamental, setFundamental] = useState(207.652)
 
-  const createNode = (freq, series) => { 
+  const createNode = (freqVal, panVal, playVal, onOff) => { 
     
     const oscillatorNode = context.createOscillator();
     //create nodes. oscillatorGainNode used for volume control. onOffNode used for playing and pausing. Pan Node for panning
@@ -19,9 +19,9 @@ export const StaticController = (props) => {
   
     //initialize node values
     oscillatorGainNode.gain.setValueAtTime(.5, context.currentTime)
-    onOffNode.gain.setValueAtTime(0, context.currentTime)      
+    onOffNode.gain.setValueAtTime(onOff, context.currentTime)      
     panNode.panningModel = 'equalpower'
-    panNode.setPosition(0, 0, 0)
+    panNode.setPosition(panVal, 0, 0)
   
     //connect node chain
     oscillatorNode.connect(oscillatorGainNode)
@@ -32,7 +32,7 @@ export const StaticController = (props) => {
   
     oscillatorNode.start()
   
-    oscillatorNode.frequency.setValueAtTime(freq, context.currentTime)
+    oscillatorNode.frequency.setValueAtTime(freqVal, context.currentTime)
   
   
     //saves oscillator values as object that can be manipulated later
@@ -41,11 +41,11 @@ export const StaticController = (props) => {
       oscillatorGainNode: oscillatorGainNode,
       onOffNode: onOffNode,
       oscillatorPanNode: panNode,
-      frequency: freq,
+      frequency: freqVal,
       type: oscillatorNode.type,
       gain: 50,
-      pan: 0,
-      playing: 'Play',
+      pan: panVal,
+      playing: playVal,
   }
   return oscillatorNodeValues
   }
@@ -53,7 +53,7 @@ export const StaticController = (props) => {
 
   const [nodes, dispatch] = useReducer(
     reducer, 
-    [createNode(440, 1)]
+    [createNode(440, 0, 'Play', 0)]
     )
 
 
@@ -64,13 +64,24 @@ function reducer(nodes, action) {
   let freqVal = null
   let panVal = null  
   let playVal = null
+  let onOff = null
+  let i = null
 
   switch (action.type) {
     case 'create':
+      if((action.play === 'Pause') && (action.i%2 === 0)) {
+        panVal = -1
+
+      } else if((action.play === 'Pause') && (action.i%2 != 0)) {
+        panVal = 1
+      } else if(action.play === 'Play') {
+        panVal = 0
+      }
       action.freq ? freqVal = action.freq : freqVal = 440
-      action.pan ? panVal = action.pan : panVal = 0
-      action.play ? playVal = action.play : playVal = "Play"
-      const newNode = createNode(freqVal, panVal, playVal)
+      action.play ? playVal = action.play : playVal = 'Play'
+      action.onOff ? onOff = action.onOff : onOff = '0'
+      const newNode = createNode(freqVal, panVal, playVal, onOff)
+      console.log(nodes)
       nodes=[...nodes, newNode]
       return nodes
     
@@ -85,7 +96,6 @@ function reducer(nodes, action) {
       return nodes
     
     case 'play/pause':
-      console.log(selectedOscillatorNode)
       if(selectedOscillatorNode.onOffNode.gain.value === 0) { 
         selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, context.currentTime)   
         selectedOscillatorNode.playing = "Pause"
@@ -109,6 +119,14 @@ function reducer(nodes, action) {
       })
       nodes = oscillatorNodeCopy
       return nodes
+
+    case 'play-all':
+      oscillatorNodeCopy.map((node) => {
+        node.onOffNode.gain.setValueAtTime(1, context.currentTime)
+        node.playing = 'Pause'
+      })
+    nodes = oscillatorNodeCopy
+    return nodes
     case 'oscillator':
       const oscillatorType = action.value.toLowerCase()
       selectedOscillatorNode.oscillatorNode.type = oscillatorType
@@ -134,21 +152,8 @@ function reducer(nodes, action) {
       nodes = oscillatorNodeCopy
       return nodes
     
-    case 'preset':
-      const selectedPreset = action.e.target.value
-      switch (selectedPreset) {
-        case '1 - 3 - 5':
-          for (let i = 0; i<2; i++) {
-            createNode()
-          }
-        break
-      }
-      nodes = oscillatorNodeCopy
-      return nodes
-    
     default:
-      throw new Error();
-    break
+      throw new Error();    
   }
 }
 
@@ -168,6 +173,8 @@ function reducer(nodes, action) {
     let freqMultiplier = null
     let freqArray = null
 
+    const i = null
+
     switch (selectedPreset) {
       case '1 - 3 - 5':
         dispatch({type: 'clear'})
@@ -175,8 +182,8 @@ function reducer(nodes, action) {
         freqArray = freqMultiplier.map((multiplier) => {
           return multiplier * fundamental
         })
-        freqArray.map((freq) => {
-          dispatch({type: 'create', freq})
+        freqArray.map((freq, i) => {
+          dispatch({type: 'create', freq, i})
         })        
       break
       case '1 - 3 - 5 - 8':
@@ -186,7 +193,7 @@ function reducer(nodes, action) {
           return multiplier * fundamental
         })
         freqArray.map((freq) => {
-          dispatch({type: 'create', freq})
+          dispatch({type: 'create', freq, i})
         }) 
       break  
     }
@@ -194,13 +201,10 @@ function reducer(nodes, action) {
 
   //play or pause by turning onOffNode to 1 or 0 respectively
   const playPauseWrapper = (node, i) => {
-    console.log(node.oscillatorNode.context.state)
-    if(node.oscillatorNode.context.state === 'suspended') {
-      
+    if(node.oscillatorNode.context.state === 'suspended') {      
       node.oscillatorNode.context.resume()
-      .then(() => {
-        
-        actualPlayPause(i)
+      .then(() => {  
+      actualPlayPause(i)
     })
     } else {
       actualPlayPause(i)

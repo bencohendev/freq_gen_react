@@ -82,3 +82,7 @@
 .frequency-range-selector {
   width: 100px;
 }
+
+.preset-select {
+  margin-right: 10px;
+}
