@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useRef, useState, useEffect, } from 'react'
 import { Grid, Paper, Button, Slider, Select } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { FrequencySelector } from './components/FrequencySelector'
@@ -9,12 +9,12 @@ import { OscillatorType } from './components/OscillatorType'
 
 export const StaticPlayer = (props) => {
 
-  const { dispatch, nodes, overtonePreset, playPauseWrapper, pitchArray, fundamentalSetter } = props
+  const { dispatch, nodes, overtonePreset, playPauseWrapper, pitchArray, fundamentalSetter, windowDimensions, startAnimation } = props
 
   return (
     <div>
       <div className="oscillator-control-container">
-      <Grid container justify='flex-start'  spacing={3}>
+      <Grid container justify='flex-start' spacing={3}>
         <Grid item >
           <Button
             onClick={() => dispatch({type: 'create'})}
@@ -74,8 +74,11 @@ export const StaticPlayer = (props) => {
                 </Button>
               </Grid>
             </Grid>
-          <Grid container spacing={6} justify="center" alignItems="center">
+          <Grid container spacing={6} justify="center" alignItems="center" className="oscillator-inner">
+          <canvas  className={`canvas-${i} canvas`} width={windowDimensions ? windowDimensions.width : "500"} height={windowDimensions ? windowDimensions.height : "200"}>
+        </canvas>
             <Grid item xs={6} md={2} key={`play-${i}`} className="play-container">
+
               <Play nodes={nodes} playPauseWrapper={playPauseWrapper} i={i} />
             </Grid>
             <Grid item xs={6} md={2} key={`type-${i}`} className="play-container">
@@ -101,9 +104,10 @@ export const StaticPlayer = (props) => {
           </Grid>
           <Grid item  xs={12}>
             <FrequencySelector key={`selector-${i}`} oscillatorIndex={i} dispatch={(value, i) => dispatch({type:'frequency-select', value, i})} />
+            
           </Grid>
           </Grid>
-        </Paper>
+      </Paper>
       ))}
     </div>
   )

@@ -7,14 +7,14 @@ Features list
     ✔ b. change volume @done(20-05-23 10:02)
     ✔ c. change panning @done(20-05-23 10:02)
     ✔ d. play multiple pitches at once @done(20-05-23 10:02)
-    ☐ e. automatically play intervals
-    ☐ make play button change to red on click
-    ☐ make mute all button dynamic and be able to play all as well
+
+    ✔ make play button change to red on click @done
+    ✔ make mute all button dynamic and be able to play all as well @done
     ✔ mute all @done
     ☐ 
 ☐ 2. Random series of frequency player
     ✔ a. change range of pitches to play @done(20-05-23 10:02)
-    ☐ b. change speed of change in pitches
+    ✔ b. change speed of change in pitches @done
     ☐ c. have random sets of pitch series
         ✔ a1. set number of random pitches in succession @done(20-05-23 10:02)
         ✔ a2. set the speed of play of the set of pitches @done(20-05-23 10:02)
@@ -22,7 +22,7 @@ Features list
         ✔ a4. be able to have it play sets of pitches in succession or a single set of pitches at a time @done(20-05-23 10:03)
     ☐ d. generate a random set of pitches and then moved that set randomly 
     ☐ e. generate random diads/triads etc. with all the functionality of [c]
-    ☐ make play button change to red on click
+    ✔ make play button change to red on click @done
 ☐ 3. Random series of frequency player as stated above but you can individually set range for each pitch
 
 Things to Refactor

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useReducer} from 'react'
+import React, {useState, useEffect,useLayoutEffect, useReducer} from 'react'
 import { StaticPlayer } from './StaticPlayer'
 
 
@@ -8,6 +8,8 @@ export const StaticController = (props) => {
 
   
   const [fundamental, setFundamental] = useState(207.652)
+  const [freqState, setFreqState] = useState(440)
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 
   const createNode = (freqVal, panVal, playVal, onOff) => { 
     
@@ -142,6 +144,8 @@ function reducer(nodes, action) {
     case 'frequency-slide':
       selectedOscillatorNode.oscillatorNode.frequency.setValueAtTime(2**action.value, context.currentTime)
       selectedOscillatorNode.frequency = 2**action.value
+      setFreqState(selectedOscillatorNode.frequency)
+      console.log(freqState)
       nodes = oscillatorNodeCopy
       return nodes
     
@@ -149,6 +153,7 @@ function reducer(nodes, action) {
     case 'frequency-select':
       selectedOscillatorNode.oscillatorNode.frequency.setValueAtTime(action.value, context.currentTime)
       selectedOscillatorNode.frequency = action.value
+     // startAnimation(action.i, selectedOscillatorNode.frequency)
       nodes = oscillatorNodeCopy
       return nodes
     
@@ -205,6 +210,7 @@ function reducer(nodes, action) {
       node.oscillatorNode.context.resume()
       .then(() => {  
       actualPlayPause(i)
+     // startAnimation(i, node.frequency)
     })
     } else {
       actualPlayPause(i)
@@ -215,6 +221,78 @@ function reducer(nodes, action) {
     dispatch({type: 'play/pause', i})
   }
 
+
+  function getWindowDimensions() {
+    let el = document.getElementsByClassName('oscillator-container')
+   
+    if(el[0]){
+      return {
+        width: el[0].clientWidth,
+        height: el[0].clientHeight
+    }
+ 
+  }    
+}
+
+    useLayoutEffect(() => {
+      setWindowDimensions(getWindowDimensions());
+    }, []);
+    useEffect(() => {
+      function handleResize() {
+        setWindowDimensions(getWindowDimensions());
+      }  
+      window.addEventListener('resize', handleResize);  
+      return () => window.removeEventListener('resize', handleResize);    
+    }, []);
+  
+useEffect((i, freq) => {
+
+//const startAnimation = (i, freq) => {
+  let canvasClass = 'canvas'
+  let canvas = document.getElementsByClassName(canvasClass)
+  console.log(i)
+
+  if(canvas) {
+  console.log(canvas)
+  function plotSine(ctx, xOffset, freq) {
+    let width = ctx.canvas.width;
+    let height = ctx.canvas.height;
+
+    ctx.beginPath();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgb(66,44,255, .5)";
+
+    
+    let x = -1;
+    let y = 1000;
+    let amplitude = height/4;
+    let frequency = freqState/100;
+    ctx.moveTo(x, 50);
+    while (x < width) {
+        y = height/2 + amplitude * Math.sin((x+xOffset)/frequency);
+        ctx.lineTo(x, y);
+        x++;
+    }
+    ctx.stroke();
+    ctx.restore();
+}
+  function draw() {
+    console.log(canvas[0])
+    let context = canvas[0].getContext("2d");
+    
+    context.clearRect(0, 0, 10000, 5000);
+    context.save();
+    plotSine(context, step, freq);
+    context.restore();    
+    step += 4;
+    window.requestAnimationFrame(draw);
+  }
+  let step = -4;
+  window.requestAnimationFrame(draw);
+//}
+}
+}, [freqState]);
+
   return (
     <StaticPlayer 
       dispatch={dispatch}
@@ -223,6 +301,8 @@ function reducer(nodes, action) {
       playPauseWrapper={playPauseWrapper} 
       pitchArray={pitchArray}
       fundamentalSetter={fundamentalSetter}
+      //startAnimation={startAnimation}
+      windowDimensions={windowDimensions}
     />
   )
 }

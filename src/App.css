@@ -55,6 +55,7 @@
 }
 .oscillator-container {
   margin-bottom: 60px;
+  z-index: 1;
 }
 .oscillator-control-container {
   margin-bottom: 20px;
@@ -85,4 +86,15 @@
 
 .preset-select {
   margin-right: 10px;
+}
+
+.canvas {  
+  position: absolute;
+  top: 0px;
+  left: 20px;
+  z-index: 0;
+}
+
+.oscillator-inner {
+  position: relative
 }
