@@ -158,7 +158,6 @@ function reducer(nodes, action) {
         selectedOscillatorNode.onOffNode.gain.setValueAtTime(0, context.currentTime)   
         selectedOscillatorNode.playing = "Play"
         setPlayState(false)
-        console.log(playState)
         startAnimation(action.i, selectedOscillatorNode.frequency, selectedOscillatorNode.playing)
       }
       nodes = oscillatorNodeCopy
@@ -201,7 +200,6 @@ function reducer(nodes, action) {
       selectedOscillatorNode.oscillatorNode.frequency.setValueAtTime(2**action.value, context.currentTime)
       selectedOscillatorNode.frequency = 2**action.value
       setFreqState(selectedOscillatorNode.frequency)
-      console.log(selectedOscillatorNode.frequency)
       startAnimation(action.i, selectedOscillatorNode.frequency, selectedOscillatorNode.playing)
       nodes = oscillatorNodeCopy
       return nodes
