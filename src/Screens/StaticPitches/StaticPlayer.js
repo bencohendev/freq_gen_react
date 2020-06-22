@@ -9,7 +9,7 @@ import { OscillatorType } from './components/OscillatorType'
 
 export const StaticPlayer = (props) => {
 
-  const { dispatch, nodes, overtonePreset, playPauseWrapper, pitchArray, fundamentalSetter, windowDimensions, startAnimation } = props
+  const { dispatch, nodes, overtonePreset, playPauseWrapper, pitchArray, fundamentalSetter, windowDimensions } = props
 
   return (
     <div>

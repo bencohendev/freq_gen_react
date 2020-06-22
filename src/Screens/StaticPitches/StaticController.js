@@ -9,7 +9,59 @@ export const StaticController = (props) => {
   
   const [fundamental, setFundamental] = useState(207.652)
   const [freqState, setFreqState] = useState(440)
+  const [playState, setPlayState] = useState(false)
   const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+  const startAnimation = (i, freq, playing) => {
+ 
+    let canvasClass = 'canvas-'+i
+    let canvas = document.getElementsByClassName(canvasClass)
+  
+    if(canvas[0].height) {
+ 
+      function plotSine(ctx, xOffset) {
+        if(playing === 'Play'){
+          ctx.clearRect(0, 0, 10000, 5000);
+          return
+        } else {
+        let width = ctx.canvas.width;
+        let height = ctx.canvas.height;
+  
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "rgb(63,81,181, .5)";
+  
+        
+        let x = -1;
+        let y = 1000;
+        let amplitude = height/4;
+        let frequency = freqState/100;
+        ctx.moveTo(x, 50);
+        while (x < width) {
+            y = height/2 + amplitude * Math.sin((x+xOffset)/frequency);
+            ctx.lineTo(x, y);
+            x++;
+        }
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+      function draw() {
+        if(playState){
+        let context = canvas[0].getContext("2d");    
+        context.clearRect(0, 0, 10000, 5000);
+        context.save();
+        plotSine(context, step);
+        context.restore();    
+        step += 4;
+        window.requestAnimationFrame(draw);
+      }
+    }
+      let step = -4;
+      window.requestAnimationFrame(draw);
+      return
+    }
+  }
 
   const createNode = (freqVal, panVal, playVal, onOff) => { 
     
@@ -83,7 +135,6 @@ function reducer(nodes, action) {
       action.play ? playVal = action.play : playVal = 'Play'
       action.onOff ? onOff = action.onOff : onOff = '0'
       const newNode = createNode(freqVal, panVal, playVal, onOff)
-      console.log(nodes)
       nodes=[...nodes, newNode]
       return nodes
     
@@ -100,10 +151,15 @@ function reducer(nodes, action) {
     case 'play/pause':
       if(selectedOscillatorNode.onOffNode.gain.value === 0) { 
         selectedOscillatorNode.onOffNode.gain.setValueAtTime(1, context.currentTime)   
-        selectedOscillatorNode.playing = "Pause"
+        selectedOscillatorNode.playing = "Pause"  
+        setPlayState(true)
+        startAnimation(action.i, selectedOscillatorNode.frequency, selectedOscillatorNode.playing)
       } else if(selectedOscillatorNode.onOffNode.gain.value > 0) {
         selectedOscillatorNode.onOffNode.gain.setValueAtTime(0, context.currentTime)   
         selectedOscillatorNode.playing = "Play"
+        setPlayState(false)
+        console.log(playState)
+        startAnimation(action.i, selectedOscillatorNode.frequency, selectedOscillatorNode.playing)
       }
       nodes = oscillatorNodeCopy
       return nodes
@@ -145,7 +201,8 @@ function reducer(nodes, action) {
       selectedOscillatorNode.oscillatorNode.frequency.setValueAtTime(2**action.value, context.currentTime)
       selectedOscillatorNode.frequency = 2**action.value
       setFreqState(selectedOscillatorNode.frequency)
-      console.log(freqState)
+      console.log(selectedOscillatorNode.frequency)
+      startAnimation(action.i, selectedOscillatorNode.frequency, selectedOscillatorNode.playing)
       nodes = oscillatorNodeCopy
       return nodes
     
@@ -153,7 +210,7 @@ function reducer(nodes, action) {
     case 'frequency-select':
       selectedOscillatorNode.oscillatorNode.frequency.setValueAtTime(action.value, context.currentTime)
       selectedOscillatorNode.frequency = action.value
-     // startAnimation(action.i, selectedOscillatorNode.frequency)
+      startAnimation(action.i, selectedOscillatorNode.frequency, selectedOscillatorNode.playing)
       nodes = oscillatorNodeCopy
       return nodes
     
@@ -210,7 +267,6 @@ function reducer(nodes, action) {
       node.oscillatorNode.context.resume()
       .then(() => {  
       actualPlayPause(i)
-     // startAnimation(i, node.frequency)
     })
     } else {
       actualPlayPause(i)
@@ -233,7 +289,6 @@ function reducer(nodes, action) {
  
   }    
 }
-
     useLayoutEffect(() => {
       setWindowDimensions(getWindowDimensions());
     }, []);
@@ -245,54 +300,6 @@ function reducer(nodes, action) {
       return () => window.removeEventListener('resize', handleResize);    
     }, []);
   
-useEffect((i, freq) => {
-
-//const startAnimation = (i, freq) => {
-  let canvasClass = 'canvas'
-  let canvas = document.getElementsByClassName(canvasClass)
-  console.log(i)
-
-  if(canvas) {
-  console.log(canvas)
-  function plotSine(ctx, xOffset, freq) {
-    let width = ctx.canvas.width;
-    let height = ctx.canvas.height;
-
-    ctx.beginPath();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "rgb(66,44,255, .5)";
-
-    
-    let x = -1;
-    let y = 1000;
-    let amplitude = height/4;
-    let frequency = freqState/100;
-    ctx.moveTo(x, 50);
-    while (x < width) {
-        y = height/2 + amplitude * Math.sin((x+xOffset)/frequency);
-        ctx.lineTo(x, y);
-        x++;
-    }
-    ctx.stroke();
-    ctx.restore();
-}
-  function draw() {
-    console.log(canvas[0])
-    let context = canvas[0].getContext("2d");
-    
-    context.clearRect(0, 0, 10000, 5000);
-    context.save();
-    plotSine(context, step, freq);
-    context.restore();    
-    step += 4;
-    window.requestAnimationFrame(draw);
-  }
-  let step = -4;
-  window.requestAnimationFrame(draw);
-//}
-}
-}, [freqState]);
-
   return (
     <StaticPlayer 
       dispatch={dispatch}
@@ -301,7 +308,6 @@ useEffect((i, freq) => {
       playPauseWrapper={playPauseWrapper} 
       pitchArray={pitchArray}
       fundamentalSetter={fundamentalSetter}
-      //startAnimation={startAnimation}
       windowDimensions={windowDimensions}
     />
   )
