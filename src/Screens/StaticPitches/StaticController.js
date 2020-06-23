@@ -92,6 +92,10 @@ function reducer(nodes, action) {
       return nodes
     
     case 'clear':
+      oscillatorNodeCopy.map((node) => {
+        node.onOffNode.gain.setValueAtTime(0, context.currentTime)
+        node.playing = 'Play'
+      })
       nodes=[]
       return nodes
     
